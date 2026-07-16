@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+  <!-- Deep Background -->
+  <rect width="512" height="512" rx="0" fill="#0A0A0C" />
+  
+  <!-- Subtle Industrial Grid/Details in background -->
+  <path d="M 0 64 L 512 64 M 0 128 L 512 128 M 0 384 L 512 384 M 0 448 L 512 448 M 64 0 L 64 512 M 128 0 L 128 512 M 384 0 L 384 512 M 448 0 L 448 512" stroke="#1A1A1F" stroke-width="2" />
+
+  <!-- Outer Bold Geometric Hexagon Frame -->
+  <polygon points="256,40 460,140 460,372 256,472 52,372 52,140" fill="none" stroke="#2D2D34" stroke-width="12" stroke-linejoin="miter" />
+  
+  <!-- Inner Bright Orange Accented Shield/A Emblem -->
+  <polygon points="256,70 430,154 430,358 256,442 82,358 82,154" fill="none" stroke="#F27D26" stroke-width="8" stroke-linejoin="miter" stroke-dasharray="300 20" />
+
+  <!-- The "ATLAS / CORE" Bold Icon Core -->
+  <g transform="translate(128, 140)">
+    <!-- Stylized heavy dumbbell/A-Frame -->
+    <!-- Left Pillar -->
+    <path d="M 40 180 L 100 20 L 128 20 L 128 230 L 80 230 L 80 120 L 55 180 Z" fill="#F4F4F5" />
+    <!-- Right Pillar -->
+    <path d="M 216 180 L 156 20 L 128 20 L 128 230 L 176 230 L 176 120 L 201 180 Z" fill="#F4F4F5" />
+    
+    <!-- Heavy Horizontal Knurled Barbell / Crossbeam -->
+    <rect x="50" y="115" width="156" height="24" fill="#F27D26" />
+    
+    <!-- Core Power Indicator (Triangle at the top center) -->
+    <polygon points="128,45 108,85 148,85" fill="#F27D26" />
+  </g>
+
+  <!-- Technical Label Overlay for that Industrial High Density Vibe -->
+  <text x="256" y="415" font-family="'JetBrains Mono', 'Fira Code', monospace" font-size="20" font-weight="bold" fill="#A1A1AA" letter-spacing="6" text-anchor="middle">CORE.TRAIN</text>
+  <text x="256" y="435" font-family="'JetBrains Mono', 'Fira Code', monospace" font-size="11" font-weight="medium" fill="#F27D26" letter-spacing="4" text-anchor="middle">ATLAS v1.0</text>
+</svg>
