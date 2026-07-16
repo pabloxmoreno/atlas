@@ -381,7 +381,7 @@ export default function WorkoutActive({
               {/* Exercise Header */}
               <div className="flex justify-between items-center bg-zinc-900/90 border-b border-zinc-800/80 px-4 py-3.5">
                 <div>
-                  <span className="text-[10px] uppercase tracking-wider text-yellow-500 font-bold">
+                  <span className="text-[11px] uppercase tracking-wider text-yellow-500 font-bold">
                     {workoutEx.category}
                   </span>
                   <h4 className="font-display font-bold text-sm text-zinc-100">{workoutEx.name}</h4>
@@ -399,7 +399,7 @@ export default function WorkoutActive({
               <div className="p-4 overflow-x-auto">
                 <table className="w-full text-left border-collapse min-w-[340px]">
                   <thead>
-                    <tr className="border-b border-zinc-800/60 text-[10px] text-zinc-500 font-bold uppercase tracking-wider">
+                    <tr className="border-b border-zinc-800/60 text-[11px] text-zinc-500 font-bold uppercase tracking-wider">
                       <th className="py-2 text-center w-12">Seria</th>
                       <th className="py-2 pl-2">Typ</th>
                       <th className="py-2">Ciężar (kg)</th>
@@ -430,7 +430,7 @@ export default function WorkoutActive({
                                 isWarmup: !set.isWarmup,
                               })
                             }
-                            className={`text-[9px] font-bold px-1.5 py-0.5 rounded-sm uppercase tracking-wide border cursor-pointer ${
+                            className={`text-[11px] font-bold px-1.5 py-0.5 rounded-sm uppercase tracking-wide border cursor-pointer ${
                               set.isWarmup
                                 ? 'bg-orange-500/10 text-orange-400 border-orange-500/20'
                                 : 'bg-zinc-800 text-zinc-400 border-zinc-700/40 hover:border-zinc-600'
@@ -539,7 +539,7 @@ export default function WorkoutActive({
 
               {/* Add set button inside exercise card */}
               <div className="bg-zinc-900/20 border-t border-zinc-800/30 px-4 py-2 flex justify-between items-center text-xs">
-                <span className="text-zinc-500 font-mono text-[10px]">
+                <span className="text-zinc-500 font-mono text-[11px]">
                   Tonaż: {workoutEx.sets.reduce((sum, s) => sum + (s.completed ? s.weight * s.reps : 0), 0)} kg
                 </span>
                 <button
@@ -570,7 +570,7 @@ export default function WorkoutActive({
           <div className="flex items-center gap-2.5">
             <Clock className={`w-5 h-5 ${restSecondsLeft !== null ? 'text-yellow-400 animate-pulse' : 'text-zinc-500'}`} />
             <div>
-              <p className="text-[10px] uppercase font-bold tracking-wider text-zinc-500">Stoper odpoczynku</p>
+              <p className="text-[11px] uppercase font-bold tracking-wider text-zinc-500">Stoper odpoczynku</p>
               <p className="text-lg font-mono font-bold text-zinc-100">
                 {restSecondsLeft !== null ? formatTime(restSecondsLeft) : formatTime(restDuration)}
               </p>

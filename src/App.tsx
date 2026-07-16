@@ -327,19 +327,22 @@ export default function App() {
     <div className="min-h-screen bg-zinc-950 text-zinc-100 flex flex-col">
       
       {/* HEADER BAR */}
-      <header className="sticky top-0 z-40 bg-zinc-950/90 backdrop-blur-md border-b border-zinc-900 px-4 py-3.5 flex items-center justify-between max-w-lg mx-auto w-full">
+      <header 
+        style={{ paddingTop: 'calc(env(safe-area-inset-top) + 14px)' }}
+        className="sticky top-0 z-40 bg-zinc-950/90 backdrop-blur-md border-b border-zinc-900 px-4 pb-3.5 flex items-center justify-between max-w-lg mx-auto w-full"
+      >
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-lg bg-yellow-400 flex items-center justify-center text-zinc-950 shadow-md shadow-yellow-400/10">
             <Dumbbell className="w-5 h-5 fill-zinc-950 stroke-[2.5]" />
           </div>
           <div>
             <h1 className="font-display font-bold text-sm tracking-tight text-white">ATLAS</h1>
-            <p className="text-[9px] text-zinc-500 font-mono tracking-wider font-bold">TRACKER TRENINGOWY</p>
+            <p className="text-[11px] text-zinc-500 font-mono tracking-wider font-bold">TRACKER TRENINGOWY</p>
           </div>
         </div>
 
         {/* Offline indicator */}
-        <span className="flex items-center gap-1 bg-zinc-900 border border-zinc-800 text-zinc-400 font-mono text-[9px] font-bold px-2 py-1 rounded-md">
+        <span className="flex items-center gap-1 bg-zinc-900 border border-zinc-800 text-zinc-400 font-mono text-[11px] font-bold px-2 py-1 rounded-md">
           <Zap className="w-3 h-3 text-emerald-400 fill-emerald-400" />
           OFFLINE PWA
         </span>
@@ -385,7 +388,10 @@ export default function App() {
       </main>
 
       {/* RESPONSIVE BOTTOM NAVIGATION BAR FOR MOBILE standalone / iOS / Android */}
-      <nav className="fixed bottom-0 left-0 right-0 z-30 bg-zinc-950/95 backdrop-blur-md border-t border-zinc-900 px-2 py-2 pb-safe max-w-lg mx-auto rounded-t-xl shadow-2xl">
+      <nav 
+        style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 8px)' }}
+        className="fixed bottom-0 left-0 right-0 z-30 bg-zinc-950/95 backdrop-blur-md border-t border-zinc-900 px-2 pt-2 max-w-lg mx-auto rounded-t-xl shadow-2xl"
+      >
         <div className="grid grid-cols-5 gap-1">
           <button
             onClick={() => setActiveTab('dashboard')}
@@ -396,7 +402,7 @@ export default function App() {
             }`}
           >
             <LayoutGrid className="w-5 h-5 stroke-[2]" />
-            <span className="text-[9px] font-bold mt-1 tracking-wide">Panel</span>
+            <span className="text-[11px] font-bold mt-1 tracking-wide">Panel</span>
           </button>
 
           <button
@@ -408,7 +414,7 @@ export default function App() {
             }`}
           >
             <History className="w-5 h-5 stroke-[2]" />
-            <span className="text-[9px] font-bold mt-1 tracking-wide">Dziennik</span>
+            <span className="text-[11px] font-bold mt-1 tracking-wide">Dziennik</span>
           </button>
 
           <button
@@ -420,7 +426,7 @@ export default function App() {
             }`}
           >
             <FileText className="w-5 h-5 stroke-[2]" />
-            <span className="text-[9px] font-bold mt-1 tracking-wide">Szablony</span>
+            <span className="text-[11px] font-bold mt-1 tracking-wide">Szablony</span>
           </button>
 
           <button
@@ -432,7 +438,7 @@ export default function App() {
             }`}
           >
             <TrendingUp className="w-5 h-5 stroke-[2]" />
-            <span className="text-[9px] font-bold mt-1 tracking-wide">Wykresy</span>
+            <span className="text-[11px] font-bold mt-1 tracking-wide">Wykresy</span>
           </button>
 
           <button
@@ -444,7 +450,7 @@ export default function App() {
             }`}
           >
             <Settings className="w-5 h-5 stroke-[2]" />
-            <span className="text-[9px] font-bold mt-1 tracking-wide">Profil i Dane</span>
+            <span className="text-[11px] font-bold mt-1 tracking-wide">Profil</span>
           </button>
         </div>
       </nav>

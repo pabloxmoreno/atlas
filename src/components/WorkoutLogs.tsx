@@ -138,7 +138,7 @@ export default function WorkoutLogs({ workouts, onDeleteSession, userWeight, use
                   <div className="flex items-center justify-between md:justify-end gap-6 border-t md:border-t-0 border-zinc-800/40 pt-3 md:pt-0">
                     <div className="grid grid-cols-3 gap-x-4 gap-y-1 text-left md:text-right">
                       <div>
-                        <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider block">
+                        <span className="text-[11px] text-zinc-500 font-bold uppercase tracking-wider block">
                           Tonaż
                         </span>
                         <span className="text-xs font-mono font-bold text-emerald-400">
@@ -146,7 +146,7 @@ export default function WorkoutLogs({ workouts, onDeleteSession, userWeight, use
                         </span>
                       </div>
                       <div>
-                        <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider block">
+                        <span className="text-[11px] text-zinc-500 font-bold uppercase tracking-wider block">
                           Serie
                         </span>
                         <span className="text-xs font-mono font-bold text-zinc-300">
@@ -154,7 +154,7 @@ export default function WorkoutLogs({ workouts, onDeleteSession, userWeight, use
                         </span>
                       </div>
                       <div>
-                        <span className="text-[10px] text-zinc-500 font-bold uppercase tracking-wider block">
+                        <span className="text-[11px] text-zinc-500 font-bold uppercase tracking-wider block">
                           Spalone
                         </span>
                         <span className="text-xs font-mono font-bold text-orange-400">
@@ -201,7 +201,7 @@ export default function WorkoutLogs({ workouts, onDeleteSession, userWeight, use
                             <h5 className="font-bold text-sm text-zinc-200">
                               {index + 1}. {ex.name}
                             </h5>
-                            <span className="text-[9px] uppercase tracking-wider text-zinc-500 font-extrabold bg-zinc-900 px-2 py-0.5 rounded-sm border border-zinc-800/50">
+                            <span className="text-[11px] uppercase tracking-wider text-zinc-500 font-extrabold bg-zinc-900 px-2 py-0.5 rounded-sm border border-zinc-800/50">
                               {ex.category}
                             </span>
                           </div>
@@ -217,13 +217,13 @@ export default function WorkoutLogs({ workouts, onDeleteSession, userWeight, use
                                     : 'bg-zinc-900/40 border-zinc-800 text-zinc-500'
                                 }`}
                               >
-                                <span className="font-bold text-[10px] text-zinc-500">S{setIndex + 1}</span>
+                                <span className="font-bold text-xs text-zinc-500">S{setIndex + 1}</span>
                                 <div className="text-right">
                                   <span className="font-bold text-zinc-100">{set.weight} kg</span>
                                   <span className="mx-1">×</span>
                                   <span className="font-bold text-yellow-400">{set.reps}</span>
                                   {set.rpe && (
-                                    <span className="text-[9px] text-orange-400 font-bold ml-1.5 bg-orange-500/10 px-1 rounded-xs">
+                                    <span className="text-[11px] text-orange-400 font-bold ml-1.5 bg-orange-500/10 px-1 rounded-xs">
                                       RPE {set.rpe}
                                     </span>
                                   )}

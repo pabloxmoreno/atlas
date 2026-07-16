@@ -226,11 +226,11 @@ export default function Dashboard({
 
       {/* Templates Quick Start */}
       <div className="space-y-3">
-        <div className="flex justify-between items-center">
+        <div className="flex flex-wrap items-baseline justify-between gap-2">
           <h3 className="font-display font-bold text-lg text-zinc-200">Wybierz szablon treningu</h3>
           <button
             onClick={() => onNavigateToTab('templates')}
-            className="text-xs font-semibold text-yellow-400 hover:underline cursor-pointer"
+            className="text-xs font-semibold text-yellow-400 hover:underline cursor-pointer shrink-0"
           >
             Wszystkie szablony ({templates.length})
           </button>
@@ -277,11 +277,11 @@ export default function Dashboard({
 
       {/* Recent History Preview */}
       <div className="space-y-3">
-        <div className="flex justify-between items-center">
+        <div className="flex flex-wrap items-baseline justify-between gap-2">
           <h3 className="font-display font-bold text-lg text-zinc-200">Ostatnia aktywność</h3>
           <button
             onClick={() => onNavigateToTab('history')}
-            className="text-xs font-semibold text-yellow-400 hover:underline cursor-pointer"
+            className="text-xs font-semibold text-yellow-400 hover:underline cursor-pointer shrink-0"
           >
             Cała historia ({workouts.length})
           </button>
