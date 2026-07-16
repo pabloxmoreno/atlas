@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="pl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>Atlas - Tracker Treningowy</title>
+    
+    <!-- PWA / Mobile Web App Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Atlas" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="theme-color" content="#121214" />
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    
+    <!-- Custom Style to prevent body-scroll bounce on iOS and match layout -->
+    <style>
+      html, body {
+        background-color: #121214;
+        color: #f4f4f5;
+        overscroll-behavior-y: contain;
+        -webkit-tap-highlight-color: transparent;
+      }
+    </style>
+  </head>
+  <body class="bg-zinc-950 text-zinc-100 font-sans antialiased">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+

@@ -1,0 +1,6 @@
+{
+  "name": "Tracker Treningowy",
+  "description": "Offline-owa aplikacja do śledzenia postępów na siłowni, zapisywania serii, powtórzeń i ciężarów dla każdego ćwiczenia.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
