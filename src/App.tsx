@@ -364,8 +364,8 @@ export default function App() {
         className="sticky top-0 z-40 bg-zinc-950/90 backdrop-blur-md border-b border-zinc-900 px-4 pb-3.5 flex items-center justify-between max-w-lg mx-auto w-full"
       >
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-yellow-400 flex items-center justify-center text-zinc-950 shadow-md shadow-yellow-400/10">
-            <Dumbbell className="w-5 h-5 fill-zinc-950 stroke-[2.5]" />
+          <div className="w-8 h-8 rounded-lg bg-yellow-400 flex items-center justify-center text-black shadow-md shadow-yellow-400/10">
+            <Dumbbell className="w-5 h-5 fill-black text-black stroke-[2.5]" />
           </div>
           <div>
             <h1 className="font-display font-bold text-sm tracking-tight text-white">ATLAS</h1>
