@@ -151,52 +151,93 @@ export default function BackupSettings({
     <div className="space-y-6">
       {/* 1. PHYSICAL PROFILE SECTION */}
       <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 shadow-lg space-y-4">
-        <div className="flex items-center gap-2">
-          <Scale className="w-5 h-5 text-yellow-400" />
-          <h3 className="font-display font-bold text-lg text-white">Twój Profil Fizyczny</h3>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Scale className="w-5 h-5 text-yellow-400" />
+            <h3 className="font-display font-bold text-lg text-white">Twój Profil Fizyczny</h3>
+          </div>
+          <span className="text-[10px] font-mono font-bold bg-zinc-800 text-zinc-300 px-2 py-0.5 rounded-md">
+            Biometria
+          </span>
         </div>
-        <p className="text-xs text-zinc-400">
-          Wprowadź swoje parametry ciała, aby system mógł dokładnie kalkulować spalone kalorie na treningach siłowych oraz kardio.
+        <p className="text-xs text-zinc-400 leading-relaxed">
+          Wprowadź swoje aktualne parametry ciała. Posłużą one do wyliczania wskaźników BMI, dziennego metabolizmu BMR oraz zostaną uwzględnione w analizach i raporcie dla Trenera AI.
         </p>
 
-        <div className="grid grid-cols-2 gap-4 pt-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
           {/* Weight Input */}
-          <div className="bg-zinc-950 border border-zinc-800/80 rounded-xl p-3 space-y-1.5 focus-within:border-yellow-400 transition-colors">
-            <label className="text-[10px] text-zinc-500 font-mono font-bold uppercase tracking-wider block">
-              Twoja waga (kg)
-            </label>
-            <div className="flex items-center gap-1.5">
+          <div className="bg-zinc-950 border border-zinc-800/80 rounded-xl p-3.5 space-y-2 focus-within:border-yellow-400 transition-colors">
+            <div className="flex justify-between items-center">
+              <label className="text-[10px] text-zinc-500 font-mono font-bold uppercase tracking-wider">
+                Masa ciała
+              </label>
+              <span className="text-xs font-mono font-bold text-yellow-400">{userWeight} kg</span>
+            </div>
+            
+            <div className="flex items-center gap-2">
               <Scale className="w-4 h-4 text-zinc-400 shrink-0" />
               <input
                 type="number"
-                step="0.1"
+                step="0.5"
                 min="30"
-                max="300"
+                max="250"
                 value={userWeight || ''}
                 onChange={(e) => onUpdateWeight(parseFloat(e.target.value) || 0)}
-                className="bg-transparent text-sm text-white font-mono font-bold focus:outline-none w-full"
-                placeholder="np. 80"
+                className="bg-zinc-900 px-2.5 py-1.5 rounded-lg text-sm text-white font-mono font-bold focus:outline-none focus:ring-1 focus:ring-yellow-400 w-full border border-zinc-800"
+                placeholder="np. 82.5"
               />
+            </div>
+
+            {/* Quick adjusters */}
+            <div className="flex items-center gap-1.5 pt-1">
+              {[-1, -0.5, 0.5, 1].map((delta) => (
+                <button
+                  key={delta}
+                  type="button"
+                  onClick={() => onUpdateWeight(Math.max(30, Math.round((userWeight + delta) * 10) / 10))}
+                  className="flex-1 py-1 text-[10px] font-mono font-bold bg-zinc-900 hover:bg-zinc-800 text-zinc-300 rounded-md border border-zinc-800/80 cursor-pointer transition-all active:scale-95"
+                >
+                  {delta > 0 ? `+${delta}` : delta}
+                </button>
+              ))}
             </div>
           </div>
 
           {/* Height Input */}
-          <div className="bg-zinc-950 border border-zinc-800/80 rounded-xl p-3 space-y-1.5 focus-within:border-yellow-400 transition-colors">
-            <label className="text-[10px] text-zinc-500 font-mono font-bold uppercase tracking-wider block">
-              Twój wzrost (cm)
-            </label>
-            <div className="flex items-center gap-1.5">
+          <div className="bg-zinc-950 border border-zinc-800/80 rounded-xl p-3.5 space-y-2 focus-within:border-yellow-400 transition-colors">
+            <div className="flex justify-between items-center">
+              <label className="text-[10px] text-zinc-500 font-mono font-bold uppercase tracking-wider">
+                Wzrost
+              </label>
+              <span className="text-xs font-mono font-bold text-yellow-400">{userHeight} cm</span>
+            </div>
+            
+            <div className="flex items-center gap-2">
               <Ruler className="w-4 h-4 text-zinc-400 shrink-0" />
               <input
                 type="number"
                 step="1"
                 min="100"
-                max="250"
+                max="240"
                 value={userHeight || ''}
                 onChange={(e) => onUpdateHeight(parseInt(e.target.value) || 0)}
-                className="bg-transparent text-sm text-white font-mono font-bold focus:outline-none w-full"
-                placeholder="np. 180"
+                className="bg-zinc-900 px-2.5 py-1.5 rounded-lg text-sm text-white font-mono font-bold focus:outline-none focus:ring-1 focus:ring-yellow-400 w-full border border-zinc-800"
+                placeholder="np. 182"
               />
+            </div>
+
+            {/* Quick adjusters */}
+            <div className="flex items-center gap-1.5 pt-1">
+              {[-5, -1, 1, 5].map((delta) => (
+                <button
+                  key={delta}
+                  type="button"
+                  onClick={() => onUpdateHeight(Math.max(100, userHeight + delta))}
+                  className="flex-1 py-1 text-[10px] font-mono font-bold bg-zinc-900 hover:bg-zinc-800 text-zinc-300 rounded-md border border-zinc-800/80 cursor-pointer transition-all active:scale-95"
+                >
+                  {delta > 0 ? `+${delta}` : delta}
+                </button>
+              ))}
             </div>
           </div>
         </div>
@@ -204,15 +245,22 @@ export default function BackupSettings({
         {/* Dynamic biological indicators */}
         {userWeight > 0 && userHeight > 0 && (
           <div className="grid grid-cols-2 gap-3 pt-1 text-xs">
-            <div className="bg-zinc-850/50 rounded-xl p-3 border border-zinc-800/40">
+            <div className="bg-zinc-950/90 rounded-xl p-3.5 border border-zinc-800">
               <span className="text-zinc-500 text-[10px] font-mono font-bold uppercase block">Wskaźnik BMI</span>
-              <span className="font-mono text-sm font-bold text-zinc-200">{bmi.toFixed(1)}</span>
-              <span className="text-[10px] text-zinc-400 ml-1.5 font-medium">({bmiDesc})</span>
+              <div className="flex items-baseline gap-2 mt-0.5">
+                <span className="font-mono text-base font-bold text-yellow-400">{bmi.toFixed(1)}</span>
+                <span className="text-[11px] text-zinc-300 font-medium">{bmiDesc}</span>
+              </div>
+              <span className="text-[10px] text-zinc-500 block mt-1">waga / (wzrost)²</span>
             </div>
-            <div className="bg-zinc-850/50 rounded-xl p-3 border border-zinc-800/40">
-              <span className="text-zinc-500 text-[10px] font-mono font-bold uppercase block">Zapotrzebowanie BMR</span>
-              <span className="font-mono text-sm font-bold text-zinc-200">{Math.round(bmr)} kcal</span>
-              <span className="text-[10px] text-zinc-400 block mt-0.5 font-medium">dzienna przemiana</span>
+
+            <div className="bg-zinc-950/90 rounded-xl p-3.5 border border-zinc-800">
+              <span className="text-zinc-500 text-[10px] font-mono font-bold uppercase block">Metabolizm BMR</span>
+              <div className="flex items-baseline gap-1 mt-0.5">
+                <span className="font-mono text-base font-bold text-emerald-400">{Math.round(bmr)}</span>
+                <span className="text-xs text-zinc-400 font-mono">kcal/dzień</span>
+              </div>
+              <span className="text-[10px] text-zinc-500 block mt-1">podstawowa przemiana</span>
             </div>
           </div>
         )}

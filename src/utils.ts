@@ -107,12 +107,6 @@ export function formatDataForAI(
   const totalDurationSeconds = filteredWorkouts.reduce((sum, w) => sum + w.duration, 0);
   const totalDurationMinutes = Math.round(totalDurationSeconds / 60);
 
-  // Calculate calories burned
-  const totalCalories = filteredWorkouts.reduce((sum, w) => {
-    const cats = w.exercises.map((e) => e.category);
-    return sum + calculateSessionCalories(w.duration, weightKg, heightCm, cats);
-  }, 0);
-
   const bmi = calculateBMI(weightKg, heightCm);
   const bmiDesc = getBMIDescription(bmi);
   const bmr = calculateBMR(weightKg, heightCm);
@@ -132,8 +126,7 @@ export function formatDataForAI(
   output += `## 2. STATYSTYKI Z OSTATNICH ${daysLimit} DNI\n`;
   output += `- Liczba treningów: ${totalWorkouts}\n`;
   output += `- Łączny czas aktywności: ${totalDurationMinutes} minut (${(totalDurationSeconds / 3600).toFixed(1)} godz.)\n`;
-  output += `- Łączny przerzucony ciężar (tonaż): ${totalVolume} kg\n`;
-  output += `- Szacowane spalone kalorie: ${totalCalories} kcal\n\n`;
+  output += `- Łączny przerzucony ciężar (tonaż): ${totalVolume} kg\n\n`;
 
   output += `## 3. HISTORIA TRENINGÓW (SZCZEGÓŁOWA)\n`;
 
@@ -147,14 +140,11 @@ export function formatDataForAI(
       const wVolume = w.exercises.reduce((exSum, ex) => {
         return exSum + ex.sets.reduce((setSum, set) => setSum + (set.completed ? set.weight * set.reps : 0), 0);
       }, 0);
-      const wCats = w.exercises.map((e) => e.category);
-      const wCals = calculateSessionCalories(w.duration, weightKg, heightCm, wCats);
 
       output += `### Trening ${totalWorkouts - idx}: ${w.name}\n`;
       output += `- Data: ${w.date}\n`;
       output += `- Czas trwania: ${Math.round(w.duration / 60)} min\n`;
       output += `- Tonaż: ${wVolume} kg\n`;
-      output += `- Spalone kalorie: ${wCals} kcal\n`;
       if (w.notes) {
         output += `- Notatki: ${w.notes}\n`;
       }

@@ -31,6 +31,10 @@ export interface WorkoutExercise {
   name: string;
   category: ExerciseCategory;
   sets: ExerciseSet[];
+  targetReps?: string;
+  tempo?: string;
+  rest?: string;
+  notes?: string;
 }
 
 export interface WorkoutSession {
@@ -44,15 +48,23 @@ export interface WorkoutSession {
   notes?: string;
 }
 
+export interface WorkoutTemplateExercise {
+  exerciseId: string;
+  name: string;
+  category: ExerciseCategory;
+  defaultSetsCount: number;
+  targetReps?: string;
+  tempo?: string;
+  rest?: string;
+  notes?: string;
+}
+
 export interface WorkoutTemplate {
   id: string;
   name: string;
-  exercises: {
-    exerciseId: string;
-    name: string;
-    category: ExerciseCategory;
-    defaultSetsCount: number;
-  }[];
+  planName?: string;
+  tag?: string;
+  exercises: WorkoutTemplateExercise[];
   notes?: string;
 }
 

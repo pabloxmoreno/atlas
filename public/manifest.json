@@ -1,11 +1,11 @@
 {
   "name": "ATLAS Gym Tracker",
   "short_name": "ATLAS",
-  "description": "Zaawansowany, minimalistyczny tracker treningów siłowych w stylu High Density z analizą AI.",
+  "description": "Zaawansowany tracker treningów siłowych z analizą progresu, tonażu i asystentem AI.",
   "start_url": ".",
   "display": "standalone",
-  "background_color": "#0A0A0C",
-  "theme_color": "#0A0A0C",
+  "background_color": "#09090b",
+  "theme_color": "#09090b",
   "orientation": "portrait-primary",
   "icons": [
     {

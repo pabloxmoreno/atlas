@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Play, Plus, Trash2, Search, X, Dumbbell, Save, Check } from 'lucide-react';
+import { Play, Plus, Trash2, Search, X, Dumbbell, Save, Check, ChevronDown, ChevronsUpDown } from 'lucide-react';
 import { WorkoutTemplate, Exercise, ExerciseCategory } from '../types';
 
 interface WorkoutTemplatesProps {
@@ -26,6 +26,29 @@ export default function WorkoutTemplates({
     category: ExerciseCategory;
     defaultSetsCount: number;
   }[]>([]);
+
+  // Track expanded template IDs (empty object = all collapsed by default)
+  const [expandedTemplates, setExpandedTemplates] = useState<Record<string, boolean>>({});
+
+  const toggleExpand = (templateId: string) => {
+    setExpandedTemplates((prev) => ({
+      ...prev,
+      [templateId]: !prev[templateId],
+    }));
+  };
+
+  const allExpanded = templates.length > 0 && templates.every((t) => expandedTemplates[t.id]);
+  const toggleAll = () => {
+    if (allExpanded) {
+      setExpandedTemplates({});
+    } else {
+      const all: Record<string, boolean> = {};
+      templates.forEach((t) => {
+        all[t.id] = true;
+      });
+      setExpandedTemplates(all);
+    }
+  };
 
   const [showAddExercise, setShowAddExercise] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -80,7 +103,7 @@ export default function WorkoutTemplates({
     }
 
     const newTemplate: WorkoutTemplate = {
-      id: `temp-${Date.now()}`,
+      id: `custom-${Date.now()}`,
       name: templateName,
       exercises: templateExercises,
       notes: templateNotes,
@@ -107,18 +130,21 @@ export default function WorkoutTemplates({
   return (
     <div className="space-y-6">
       {/* Header and Toggle Create */}
-      <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 flex items-center justify-between shadow-lg">
-        <div>
+      <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-lg">
+        <div className="min-w-0 pr-0 sm:pr-4">
           <h3 className="font-display font-bold text-lg text-white">Szablony treningowe</h3>
-          <p className="text-xs text-zinc-400 mt-0.5">Zapisane schematy ćwiczeń, które możesz błyskawicznie uruchomić.</p>
+          <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
+            Zapisane schematy ćwiczeń, które możesz błyskawicznie uruchomić lub edytować.
+          </p>
         </div>
 
         {!isCreating && (
           <button
             onClick={() => setIsCreating(true)}
-            className="flex items-center gap-1 bg-yellow-400 hover:bg-yellow-500 text-zinc-950 font-bold px-4 py-2.5 rounded-xl transition-all cursor-pointer text-xs"
+            className="flex items-center justify-center gap-2 bg-yellow-400 hover:bg-yellow-500 text-zinc-950 font-bold px-4 py-2.5 rounded-xl transition-all cursor-pointer text-xs shrink-0 self-start sm:self-center shadow-sm shadow-yellow-400/10 active:scale-95"
           >
-            <Plus className="w-4 h-4 stroke-[3]" /> Stwórz szablon
+            <Plus className="w-4 h-4 stroke-[3]" />
+            <span>Stwórz szablon</span>
           </button>
         )}
       </div>
@@ -235,61 +261,218 @@ export default function WorkoutTemplates({
         </div>
       ) : (
         /* TEMPLATES LIST VIEW */
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {templates.map((template) => {
-            const isCustom = template.id.startsWith('temp-');
+        <div className="space-y-4">
+          {/* Controls bar: Count & Expand/Collapse All */}
+          <div className="flex items-center justify-between text-xs px-1">
+            <span className="text-zinc-400 font-medium">
+              Dostępne szablony: <strong className="text-zinc-200">{templates.length}</strong>
+            </span>
+            <button
+              onClick={toggleAll}
+              className="flex items-center gap-1 text-zinc-400 hover:text-yellow-400 font-semibold px-2.5 py-1 rounded-lg hover:bg-zinc-900 border border-zinc-800/80 transition-colors cursor-pointer"
+            >
+              <ChevronsUpDown className="w-3.5 h-3.5" />
+              <span>{allExpanded ? 'Zwiń wszystkie' : 'Rozwiń wszystkie'}</span>
+            </button>
+          </div>
 
-            return (
-              <div
-                key={template.id}
-                className="bg-zinc-900/50 border border-zinc-800/80 rounded-2xl p-5 flex flex-col justify-between hover:border-zinc-800 hover:bg-zinc-900/80 transition-all duration-200"
-              >
-                <div>
-                  <div className="flex justify-between items-start mb-2">
-                    <h4 className="font-display font-bold text-base text-zinc-100 leading-tight">
-                      {template.name}
-                    </h4>
-                    {isCustom && (
-                      <button
-                        onClick={() => {
-                          if (confirm('Czy na pewno chcesz usunąć ten szablon?')) {
-                            onDeleteTemplate(template.id);
-                          }
-                        }}
-                        className="text-zinc-500 hover:text-red-400 p-1 hover:bg-red-500/10 rounded-md transition-colors cursor-pointer"
-                        title="Usuń szablon"
-                      >
-                        <Trash2 className="w-3.5 h-3.5" />
-                      </button>
-                    )}
-                  </div>
+          <div className="grid grid-cols-1 gap-3">
+            {templates.map((template) => {
+              const isCustom = template.id.startsWith('custom-');
+              const isExpanded = !!expandedTemplates[template.id];
+              const totalSets = template.exercises.reduce((acc, ex) => acc + (ex.defaultSetsCount || 3), 0);
 
-                  <p className="text-xs text-zinc-400 line-clamp-2 min-h-[32px] mb-4">
-                    {template.notes || 'Brak opisu dla tego szablonu treningowego.'}
-                  </p>
-
-                  {/* Exercises pre-view */}
-                  <div className="space-y-1.5 border-t border-zinc-800/60 pt-3 mb-5">
-                    {template.exercises.map((ex, i) => (
-                      <div key={i} className="flex justify-between items-center text-xs">
-                        <span className="text-zinc-300 font-medium truncate max-w-[200px]">{ex.name}</span>
-                        <span className="text-zinc-500 font-mono text-[10px] font-bold">
-                          {ex.defaultSetsCount} serii
-                        </span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <button
-                  onClick={() => onStartTemplateWorkout(template)}
-                  className="w-full py-3 bg-zinc-800 hover:bg-yellow-400 text-zinc-200 hover:text-zinc-950 font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 transition-all duration-200 cursor-pointer shadow-xs active:scale-98"
+              return (
+                <div
+                  key={template.id}
+                  className={`bg-zinc-900/60 border rounded-2xl transition-all duration-200 ${
+                    isExpanded
+                      ? 'border-zinc-700 bg-zinc-900/90 p-4 sm:p-5 shadow-lg'
+                      : 'border-zinc-800/80 hover:border-zinc-700 hover:bg-zinc-900/80 p-3.5 sm:p-4'
+                  }`}
                 >
-                  <Play className="w-3.5 h-3.5 fill-current stroke-none" /> Rozpocznij ten trening
-                </button>
-              </div>
-            );
-          })}
+                  {/* Collapsed minimal row */}
+                  {!isExpanded ? (
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4">
+                      <div
+                        onClick={() => toggleExpand(template.id)}
+                        className="flex-1 cursor-pointer select-none group"
+                      >
+                        <div className="flex flex-wrap items-center gap-2">
+                          <h4 className="font-bold text-sm sm:text-base text-zinc-100 group-hover:text-yellow-400 transition-colors">
+                            {template.name}
+                          </h4>
+                          <span className="text-xs text-zinc-500 font-mono shrink-0">
+                            ({template.exercises.length} ćw.)
+                          </span>
+                        </div>
+                        {template.planName && (
+                          <div className="flex items-center gap-2 mt-1">
+                            <span className="text-[10px] font-semibold text-yellow-400/80">
+                              {template.planName}
+                            </span>
+                            {template.tag && (
+                              <span className="text-[10px] text-zinc-500">
+                                • {template.tag}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="flex items-center justify-end gap-1.5 shrink-0 self-end sm:self-center">
+                        {isCustom && (
+                          <button
+                            onClick={() => {
+                              if (confirm('Czy na pewno chcesz usunąć ten szablon?')) {
+                                onDeleteTemplate(template.id);
+                              }
+                            }}
+                            className="text-zinc-500 hover:text-red-400 p-2 hover:bg-red-500/10 rounded-lg transition-colors cursor-pointer"
+                            title="Usuń szablon"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        )}
+
+                        <button
+                          type="button"
+                          onClick={() => toggleExpand(template.id)}
+                          className="text-zinc-400 hover:text-white p-2 hover:bg-zinc-800 rounded-lg transition-colors cursor-pointer flex items-center gap-1 text-xs"
+                          title="Rozwiń szczegóły"
+                        >
+                          <span className="sm:hidden text-[11px] text-zinc-400">Szczegóły</span>
+                          <ChevronDown className="w-4 h-4" />
+                        </button>
+
+                        <button
+                          onClick={() => onStartTemplateWorkout(template)}
+                          className="px-3.5 py-2 bg-yellow-400 hover:bg-yellow-500 text-zinc-950 font-bold text-xs rounded-xl flex items-center gap-1.5 transition-all duration-200 cursor-pointer shadow-xs active:scale-95"
+                          title="Rozpocznij ten trening"
+                        >
+                          <Play className="w-3.5 h-3.5 fill-current stroke-none" />
+                          <span>Start</span>
+                        </button>
+                      </div>
+                    </div>
+                  ) : (
+                    /* Expanded full view */
+                    <div className="space-y-4 animate-fade-in">
+                      {/* Header */}
+                      <div className="flex justify-between items-start gap-2">
+                        <div className="space-y-1">
+                          {template.planName && (
+                            <div className="flex flex-wrap items-center gap-1.5">
+                              <span className="text-[10px] font-extrabold uppercase tracking-wider bg-yellow-400/10 text-yellow-400 border border-yellow-400/20 px-2 py-0.5 rounded-md">
+                                {template.planName}
+                              </span>
+                              {template.tag && (
+                                <span className="text-[10px] font-bold text-zinc-400 bg-zinc-800 px-2 py-0.5 rounded-md">
+                                  {template.tag}
+                                </span>
+                              )}
+                            </div>
+                          )}
+                          <h4 className="font-display font-bold text-base text-zinc-100 leading-tight">
+                            {template.name}
+                          </h4>
+                          <div className="flex items-center gap-2 text-xs text-zinc-400 font-mono pt-0.5">
+                            <span className="text-zinc-300 font-semibold">{template.exercises.length} ćwiczeń</span>
+                            <span>•</span>
+                            <span className="text-zinc-300 font-semibold">~{totalSets} serii</span>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-1">
+                          {isCustom && (
+                            <button
+                              onClick={() => {
+                                if (confirm('Czy na pewno chcesz usunąć ten szablon?')) {
+                                  onDeleteTemplate(template.id);
+                                }
+                              }}
+                              className="text-zinc-500 hover:text-red-400 p-1.5 hover:bg-red-500/10 rounded-lg transition-colors cursor-pointer shrink-0"
+                              title="Usuń szablon"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          )}
+                          <button
+                            type="button"
+                            onClick={() => toggleExpand(template.id)}
+                            className="text-yellow-400 p-1.5 hover:bg-zinc-800 rounded-lg transition-colors cursor-pointer"
+                            title="Zwiń szczegóły"
+                          >
+                            <ChevronDown className="w-4 h-4 rotate-180" />
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Description / Notes */}
+                      {template.notes && (
+                        <p className="text-xs text-zinc-400 leading-relaxed bg-zinc-950/40 p-2.5 rounded-xl border border-zinc-800/50">
+                          {template.notes}
+                        </p>
+                      )}
+
+                      {/* Exercises detailed list */}
+                      <div className="space-y-2 border-t border-zinc-800/60 pt-3">
+                        <div className="flex items-center justify-between text-[11px] font-bold text-zinc-500 uppercase tracking-wider px-1">
+                          <span>Ćwiczenia w planie</span>
+                          <span>Serie / Tempo / Przerwy</span>
+                        </div>
+
+                        {template.exercises.map((ex, i) => (
+                          <div key={i} className="bg-zinc-950/60 border border-zinc-800/60 rounded-xl p-2.5 space-y-1.5">
+                            <div className="flex justify-between items-baseline gap-2">
+                              <span className="text-xs font-semibold text-zinc-200">
+                                {i + 1}. {ex.name}
+                              </span>
+                              <span className="text-zinc-400 font-mono text-[11px] font-bold shrink-0">
+                                {ex.defaultSetsCount} {ex.defaultSetsCount === 1 ? 'seria' : ex.defaultSetsCount < 5 ? 'serie' : 'serii'}
+                              </span>
+                            </div>
+
+                            {/* Exercise parameters: target reps, tempo, rest */}
+                            <div className="flex flex-wrap items-center gap-1.5 text-[10px] text-zinc-400 font-mono">
+                              {ex.targetReps && (
+                                <span className="bg-zinc-900 px-1.5 py-0.5 rounded border border-zinc-800 text-zinc-300">
+                                  Powt: <strong className="text-yellow-400">{ex.targetReps}</strong>
+                                </span>
+                              )}
+                              {ex.tempo && ex.tempo !== '-' && (
+                                <span className="bg-zinc-900 px-1.5 py-0.5 rounded border border-zinc-800 text-zinc-300">
+                                  Tempo: <strong className="text-cyan-400">{ex.tempo}</strong>
+                                </span>
+                              )}
+                              {ex.rest && (
+                                <span className="bg-zinc-900 px-1.5 py-0.5 rounded border border-zinc-800 text-zinc-300">
+                                  Przerwa: <strong className="text-emerald-400">{ex.rest}</strong>
+                                </span>
+                              )}
+                            </div>
+
+                            {ex.notes && (
+                              <p className="text-[11px] text-amber-300/90 bg-amber-500/10 border border-amber-500/20 px-2 py-1 rounded-md font-sans">
+                                💡 {ex.notes}
+                              </p>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+
+                      <button
+                        onClick={() => onStartTemplateWorkout(template)}
+                        className="w-full py-3 bg-yellow-400 hover:bg-yellow-500 text-zinc-950 font-bold text-xs rounded-xl flex items-center justify-center gap-1.5 transition-all duration-200 cursor-pointer shadow-md shadow-yellow-400/10 active:scale-98"
+                      >
+                        <Play className="w-3.5 h-3.5 fill-current stroke-none" /> Rozpocznij ten trening
+                      </button>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </div>
       )}
 

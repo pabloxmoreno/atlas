@@ -49,7 +49,19 @@ export default function App() {
 
       const storedTemplates = localStorage.getItem('atlas_templates');
       if (storedTemplates) {
-        setTemplates(JSON.parse(storedTemplates));
+        const parsedTemplates: WorkoutTemplate[] = JSON.parse(storedTemplates);
+        // Ensure default templates are present and updated with latest plan exercises
+        const existingIds = new Set(parsedTemplates.map((t) => t.id));
+        const missingDefaults = defaultTemplates.filter((dt) => !existingIds.has(dt.id));
+        
+        const mergedTemplates = parsedTemplates.map((t) => {
+          const defaultMatch = defaultTemplates.find((dt) => dt.id === t.id);
+          return defaultMatch ? { ...defaultMatch, ...t, exercises: defaultMatch.exercises } : t;
+        });
+
+        const finalTemplates = [...missingDefaults, ...mergedTemplates];
+        setTemplates(finalTemplates);
+        localStorage.setItem('atlas_templates', JSON.stringify(finalTemplates));
       } else {
         setTemplates(defaultTemplates);
         localStorage.setItem('atlas_templates', JSON.stringify(defaultTemplates));
@@ -57,7 +69,12 @@ export default function App() {
 
       const storedExercises = localStorage.getItem('atlas_exercises');
       if (storedExercises) {
-        setExercises(JSON.parse(storedExercises));
+        const parsedExercises: Exercise[] = JSON.parse(storedExercises);
+        const existingIds = new Set(parsedExercises.map((e) => e.id));
+        const missingDefaultEx = defaultExercises.filter((de) => !existingIds.has(de.id));
+        const mergedExercises = [...parsedExercises, ...missingDefaultEx];
+        setExercises(mergedExercises);
+        localStorage.setItem('atlas_exercises', JSON.stringify(mergedExercises));
       } else {
         setExercises(defaultExercises);
         localStorage.setItem('atlas_exercises', JSON.stringify(defaultExercises));
@@ -136,6 +153,10 @@ export default function App() {
         name: te.name,
         category: te.category,
         sets,
+        targetReps: te.targetReps,
+        tempo: te.tempo,
+        rest: te.rest,
+        notes: te.notes,
       };
     });
 
@@ -209,14 +230,24 @@ export default function App() {
 
   // Create custom exercise
   const handleAddCustomExercise = (name: string, category: ExerciseCategory) => {
+    const trimmedName = name.trim();
+    if (!trimmedName) return;
+
     const newEx: Exercise = {
       id: `ex-custom-${Date.now()}`,
-      name,
+      name: trimmedName,
       category,
       isCustom: true,
     };
 
     const updated = [newEx, ...exercises];
+    setExercises(updated);
+    localStorage.setItem('atlas_exercises', JSON.stringify(updated));
+  };
+
+  // Delete exercise from database
+  const handleDeleteExercise = (exerciseId: string) => {
+    const updated = exercises.filter((ex) => ex.id !== exerciseId);
     setExercises(updated);
     localStorage.setItem('atlas_exercises', JSON.stringify(updated));
   };
@@ -302,6 +333,7 @@ export default function App() {
             exercises={exercises}
             workouts={workouts}
             onAddCustomExercise={handleAddCustomExercise}
+            onDeleteExercise={handleDeleteExercise}
           />
         );
       case 'settings':
@@ -340,12 +372,6 @@ export default function App() {
             <p className="text-[11px] text-zinc-500 font-mono tracking-wider font-bold">TRACKER TRENINGOWY</p>
           </div>
         </div>
-
-        {/* Offline indicator */}
-        <span className="flex items-center gap-1 bg-zinc-900 border border-zinc-800 text-zinc-400 font-mono text-[11px] font-bold px-2 py-1 rounded-md">
-          <Zap className="w-3 h-3 text-emerald-400 fill-emerald-400" />
-          OFFLINE PWA
-        </span>
       </header>
 
       {/* WORKOUT IN PROGRESS BAR (MINIMIZED WIDGET) */}
@@ -375,6 +401,7 @@ export default function App() {
           <WorkoutActive
             activeSession={activeSession}
             exercisesDatabase={exercises}
+            workouts={workouts}
             onUpdateSession={handleUpdateActiveSession}
             onFinishSession={handleFinishActiveSession}
             onCancelSession={handleCancelActiveSession}

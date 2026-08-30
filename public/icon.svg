@@ -1,32 +1,113 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
-  <!-- Deep Background -->
-  <rect width="512" height="512" rx="0" fill="#0A0A0C" />
-  
-  <!-- Subtle Industrial Grid/Details in background -->
-  <path d="M 0 64 L 512 64 M 0 128 L 512 128 M 0 384 L 512 384 M 0 448 L 512 448 M 64 0 L 64 512 M 128 0 L 128 512 M 384 0 L 384 512 M 448 0 L 448 512" stroke="#1A1A1F" stroke-width="2" />
+  <defs>
+    <!-- Background Gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stopColor="#18181b" />
+      <stop offset="50%" stopColor="#09090b" />
+      <stop offset="100%" stopColor="#000000" />
+    </linearGradient>
 
-  <!-- Outer Bold Geometric Hexagon Frame -->
-  <polygon points="256,40 460,140 460,372 256,472 52,372 52,140" fill="none" stroke="#2D2D34" stroke-width="12" stroke-linejoin="miter" />
-  
-  <!-- Inner Bright Orange Accented Shield/A Emblem -->
-  <polygon points="256,70 430,154 430,358 256,442 82,358 82,154" fill="none" stroke="#F27D26" stroke-width="8" stroke-linejoin="miter" stroke-dasharray="300 20" />
+    <!-- Gold Accent Gradient -->
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stopColor="#FEF08A" />
+      <stop offset="35%" stopColor="#FACC15" />
+      <stop offset="100%" stopColor="#CA8A04" />
+    </linearGradient>
 
-  <!-- The "ATLAS / CORE" Bold Icon Core -->
-  <g transform="translate(128, 140)">
-    <!-- Stylized heavy dumbbell/A-Frame -->
-    <!-- Left Pillar -->
-    <path d="M 40 180 L 100 20 L 128 20 L 128 230 L 80 230 L 80 120 L 55 180 Z" fill="#F4F4F5" />
-    <!-- Right Pillar -->
-    <path d="M 216 180 L 156 20 L 128 20 L 128 230 L 176 230 L 176 120 L 201 180 Z" fill="#F4F4F5" />
-    
-    <!-- Heavy Horizontal Knurled Barbell / Crossbeam -->
-    <rect x="50" y="115" width="156" height="24" fill="#F27D26" />
-    
-    <!-- Core Power Indicator (Triangle at the top center) -->
-    <polygon points="128,45 108,85 148,85" fill="#F27D26" />
+    <!-- Chrome / Steel Gradient -->
+    <linearGradient id="steelGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stopColor="#FFFFFF" />
+      <stop offset="50%" stopColor="#E4E4E7" />
+      <stop offset="100%" stopColor="#71717A" />
+    </linearGradient>
+
+    <!-- Subtle Radial Glow -->
+    <radialGradient id="glow" cx="50%" cy="45%" r="60%">
+      <stop offset="0%" stopColor="#FACC15" stopOpacity="0.25" />
+      <stop offset="60%" stopColor="#FACC15" stopOpacity="0.03" />
+      <stop offset="100%" stopColor="#000000" stopOpacity="0" />
+    </radialGradient>
+
+    <!-- Drop Shadow Filter -->
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.6" />
+    </filter>
+
+    <filter id="goldGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#FACC15" flood-opacity="0.35" />
+    </filter>
+  </defs>
+
+  <!-- Squircle Base -->
+  <rect width="512" height="512" rx="112" fill="url(#bgGrad)" />
+  
+  <!-- Subtle Border Rim -->
+  <rect x="6" y="6" width="500" height="500" rx="106" fill="none" stroke="#27272a" stroke-width="3" />
+  <rect x="8" y="8" width="496" height="496" rx="104" fill="none" stroke="#FACC15" stroke-opacity="0.15" stroke-width="2" />
+
+  <!-- Ambient Glow -->
+  <circle cx="256" cy="240" r="220" fill="url(#glow)" />
+
+  <!-- Grid Tech Lines -->
+  <g opacity="0.08" stroke="#FFFFFF" stroke-width="1.5">
+    <circle cx="256" cy="240" r="160" fill="none" stroke-dasharray="6 6" />
+    <line x1="256" y1="40" x2="256" y2="440" />
+    <line x1="40" y1="240" x2="472" y2="240" />
   </g>
 
-  <!-- Technical Label Overlay for that Industrial High Density Vibe -->
-  <text x="256" y="415" font-family="'JetBrains Mono', 'Fira Code', monospace" font-size="20" font-weight="bold" fill="#A1A1AA" letter-spacing="6" text-anchor="middle">CORE.TRAIN</text>
-  <text x="256" y="435" font-family="'JetBrains Mono', 'Fira Code', monospace" font-size="11" font-weight="medium" fill="#F27D26" letter-spacing="4" text-anchor="middle">ATLAS v1.0</text>
+  <!-- Main Symbol Group: Stylized Modern Dumbbell + Monogram 'A' -->
+  <g filter="url(#shadow)" transform="translate(0, -10)">
+    
+    <!-- Central Heavy Barbell Shaft with Knurling -->
+    <rect x="180" y="232" width="152" height="24" rx="4" fill="url(#goldGrad)" />
+    
+    <!-- Knurling Texture Marks -->
+    <g opacity="0.4" stroke="#78350F" stroke-width="2">
+      <line x1="200" y1="232" x2="200" y2="256" />
+      <line x1="210" y1="232" x2="210" y2="256" />
+      <line x1="220" y1="232" x2="220" y2="256" />
+      <line x1="292" y1="232" x2="292" y2="256" />
+      <line x1="302" y1="232" x2="302" y2="256" />
+      <line x1="312" y1="232" x2="312" y2="256" />
+    </g>
+
+    <!-- Outer Collars -->
+    <rect x="166" y="222" width="14" height="44" rx="4" fill="url(#steelGrad)" />
+    <rect x="332" y="222" width="14" height="44" rx="4" fill="url(#steelGrad)" />
+
+    <!-- Left Weight Plates (Inner & Outer) -->
+    <!-- Outer Plate -->
+    <rect x="100" y="150" width="28" height="188" rx="10" fill="url(#steelGrad)" />
+    <rect x="104" y="154" width="20" height="180" rx="8" fill="#18181b" />
+    <rect x="108" y="162" width="12" height="164" rx="6" fill="url(#goldGrad)" opacity="0.9" />
+
+    <!-- Big Main Plate -->
+    <rect x="132" y="126" width="30" height="236" rx="10" fill="url(#goldGrad)" filter="url(#goldGlow)" />
+    <rect x="138" y="134" width="18" height="220" rx="8" fill="#27272a" />
+    <rect x="142" y="142" width="10" height="204" rx="5" fill="url(#goldGrad)" />
+
+    <!-- Right Weight Plates (Inner & Outer) -->
+    <!-- Big Main Plate -->
+    <rect x="350" y="126" width="30" height="236" rx="10" fill="url(#goldGrad)" filter="url(#goldGlow)" />
+    <rect x="356" y="134" width="18" height="220" rx="8" fill="#27272a" />
+    <rect x="360" y="142" width="10" height="204" rx="5" fill="url(#goldGrad)" />
+
+    <!-- Outer Plate -->
+    <rect x="384" y="150" width="28" height="188" rx="10" fill="url(#steelGrad)" />
+    <rect x="388" y="154" width="20" height="180" rx="8" fill="#18181b" />
+    <rect x="392" y="162" width="12" height="164" rx="6" fill="url(#goldGrad)" opacity="0.9" />
+
+    <!-- Central Chevron / Atlas Peak Emblem -->
+    <polygon points="256,120 286,180 226,180" fill="url(#goldGrad)" filter="url(#goldGlow)" />
+    <polygon points="256,134 276,174 236,174" fill="#18181b" />
+    <polygon points="256,146 266,168 246,168" fill="url(#goldGrad)" />
+
+    <!-- Lower Triangular Anchor -->
+    <polygon points="256,368 286,308 226,308" fill="url(#goldGrad)" filter="url(#goldGlow)" />
+    <polygon points="256,354 276,314 236,314" fill="#18181b" />
+  </g>
+
+  <!-- Typography Brand at Bottom -->
+  <text x="256" y="440" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="24" font-weight="900" fill="#F4F4F5" letter-spacing="8" text-anchor="middle">ATLAS</text>
+  <text x="256" y="464" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif" font-size="11" font-weight="700" fill="#EAB308" letter-spacing="4" text-anchor="middle">TRACKER</text>
 </svg>

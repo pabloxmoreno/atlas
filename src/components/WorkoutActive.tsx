@@ -14,24 +14,25 @@ import {
   Copy,
   ChevronUp,
   AlertTriangle,
-  Flame,
+  History,
 } from 'lucide-react';
 import { WorkoutSession, WorkoutExercise, ExerciseSet, Exercise, ExerciseCategory } from '../types';
-import { calculateSessionCalories } from '../utils';
 
 interface WorkoutActiveProps {
   activeSession: WorkoutSession;
   exercisesDatabase: Exercise[];
+  workouts?: WorkoutSession[];
   onUpdateSession: (session: WorkoutSession) => void;
   onFinishSession: () => void;
   onCancelSession: () => void;
-  userWeight: number;
-  userHeight: number;
+  userWeight?: number;
+  userHeight?: number;
 }
 
 export default function WorkoutActive({
   activeSession,
   exercisesDatabase,
+  workouts = [],
   onUpdateSession,
   onFinishSession,
   onCancelSession,
@@ -301,52 +302,83 @@ export default function WorkoutActive({
     return matchesSearch && matchesCategory;
   });
 
+  // Find historical data for an exercise and specific set
+  const getPreviousSetData = (exerciseName: string, setIndex: number) => {
+    if (!workouts || workouts.length === 0) return null;
+
+    const pastSessions = [...workouts]
+      .filter((w) => w.id !== activeSession.id && w.endTime)
+      .sort((a, b) => new Date(b.startTime).getTime() - new Date(a.startTime).getTime());
+
+    for (const session of pastSessions) {
+      const exMatch = session.exercises.find(
+        (e) => e.name.trim().toLowerCase() === exerciseName.trim().toLowerCase()
+      );
+      if (exMatch && exMatch.sets && exMatch.sets.length > 0) {
+        const completedSets = exMatch.sets.filter((s) => s.completed || (s.weight > 0 && s.reps > 0));
+        const targetSets = completedSets.length > 0 ? completedSets : exMatch.sets;
+
+        const matchingSet = targetSets[setIndex] || targetSets[targetSets.length - 1];
+        if (matchingSet && (matchingSet.weight > 0 || matchingSet.reps > 0)) {
+          return {
+            weight: matchingSet.weight,
+            reps: matchingSet.reps,
+            rpe: matchingSet.rpe,
+            sessionDate: new Date(session.startTime).toLocaleDateString('pl-PL', { day: '2-digit', month: '2-digit' }),
+          };
+        }
+      }
+    }
+    return null;
+  };
+
   return (
     <div className="space-y-6 pb-28">
       {/* Session Title and General Controls */}
-      <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-5 shadow-lg">
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-          <div className="space-y-1 w-full md:w-auto">
-            <input
-              type="text"
-              value={activeSession.name}
-              onChange={(e) => onUpdateSession({ ...activeSession, name: e.target.value })}
-              className="text-xl font-display font-bold text-white bg-transparent border-b border-transparent hover:border-zinc-700 focus:border-yellow-400 focus:outline-none w-full md:w-80 py-0.5 transition-colors"
-              placeholder="Nazwa treningu"
-            />
-            <div className="flex items-center gap-4 text-xs text-zinc-400">
-              <span className="flex items-center gap-1.5 font-mono text-yellow-400 text-sm font-semibold">
-                <Clock className="w-4 h-4" /> {formatTime(elapsedSeconds)}
-              </span>
-              <span>•</span>
-              <span>{activeSession.exercises.length} ćwiczeń</span>
-              <span>•</span>
-              <span className="flex items-center gap-1 font-mono text-orange-400 font-semibold">
-                <Flame className="w-3.5 h-3.5 fill-orange-400/20 text-orange-400" /> {calculateSessionCalories(elapsedSeconds, userWeight, userHeight, activeSession.exercises.map(e => e.category))} kcal
-              </span>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2.5 w-full md:w-auto">
-            <button
-              id="btn-cancel-workout"
-              onClick={() => setShowCancelConfirm(true)}
-              className="flex-1 md:flex-none py-2.5 px-4 bg-zinc-800 hover:bg-red-500/10 text-zinc-400 hover:text-red-400 border border-zinc-700/60 hover:border-red-500/30 rounded-xl font-semibold text-sm transition-all duration-200 cursor-pointer text-center"
-            >
-              Anuluj
-            </button>
-            <button
-              id="btn-finish-workout"
-              onClick={onFinishSession}
-              className="flex-1 md:flex-none py-2.5 px-5 bg-emerald-500 hover:bg-emerald-600 text-zinc-950 font-bold text-sm rounded-xl transition-all duration-200 cursor-pointer shadow-lg shadow-emerald-500/10 text-center"
-            >
-              Zakończ i Zapisz
-            </button>
+      <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-4 sm:p-5 shadow-lg space-y-4">
+        {/* Title and stats */}
+        <div className="space-y-2">
+          <input
+            type="text"
+            value={activeSession.name}
+            onChange={(e) => onUpdateSession({ ...activeSession, name: e.target.value })}
+            className="text-lg sm:text-xl font-display font-bold text-white bg-transparent border-b border-transparent hover:border-zinc-700 focus:border-yellow-400 focus:outline-none w-full py-0.5 transition-colors"
+            placeholder="Nazwa treningu"
+          />
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-zinc-400">
+            <span className="flex items-center gap-1.5 font-mono text-yellow-400 text-sm font-semibold">
+              <Clock className="w-4 h-4" /> {formatTime(elapsedSeconds)}
+            </span>
+            <span>•</span>
+            <span className="font-medium text-zinc-300">{activeSession.exercises.length} ćwiczeń</span>
+            <span>•</span>
+            <span className="font-medium text-zinc-400">
+              {activeSession.exercises.reduce((sum, ex) => sum + ex.sets.filter((s) => s.completed).length, 0)} serii wykonanych
+            </span>
           </div>
         </div>
 
+        {/* Action buttons */}
+        <div className="grid grid-cols-2 gap-2.5 pt-1">
+          <button
+            id="btn-cancel-workout"
+            onClick={() => setShowCancelConfirm(true)}
+            className="w-full py-2.5 px-3 bg-zinc-800 hover:bg-red-500/10 text-zinc-400 hover:text-red-400 border border-zinc-700/60 hover:border-red-500/30 rounded-xl font-semibold text-sm transition-all duration-200 cursor-pointer text-center"
+          >
+            Anuluj
+          </button>
+          <button
+            id="btn-finish-workout"
+            onClick={onFinishSession}
+            className="w-full py-2.5 px-3 bg-emerald-500 hover:bg-emerald-600 active:scale-[0.98] text-zinc-950 font-bold text-sm rounded-xl transition-all duration-200 cursor-pointer shadow-lg shadow-emerald-500/10 text-center flex items-center justify-center gap-1.5"
+          >
+            <Check className="w-4 h-4 stroke-[2.5]" />
+            <span>Zakończ i Zapisz</span>
+          </button>
+        </div>
+
         {/* Notes input */}
-        <div className="mt-4 pt-4 border-t border-zinc-800/80">
+        <div className="pt-3 border-t border-zinc-800/80">
           <textarea
             value={activeSession.notes || ''}
             onChange={(e) => onUpdateSession({ ...activeSession, notes: e.target.value })}
@@ -379,160 +411,228 @@ export default function WorkoutActive({
               className="bg-zinc-900/60 border border-zinc-800/80 rounded-2xl overflow-hidden shadow-sm"
             >
               {/* Exercise Header */}
-              <div className="flex justify-between items-center bg-zinc-900/90 border-b border-zinc-800/80 px-4 py-3.5">
-                <div>
-                  <span className="text-[11px] uppercase tracking-wider text-yellow-500 font-bold">
-                    {workoutEx.category}
-                  </span>
-                  <h4 className="font-display font-bold text-sm text-zinc-100">{workoutEx.name}</h4>
+              <div className="bg-zinc-900/90 border-b border-zinc-800/80 px-4 py-3.5 space-y-2">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <span className="text-[11px] uppercase tracking-wider text-yellow-500 font-bold">
+                      {workoutEx.category}
+                    </span>
+                    <h4 className="font-display font-bold text-sm text-zinc-100">{workoutEx.name}</h4>
+                  </div>
+                  <button
+                    onClick={() => handleRemoveExercise(workoutEx.id)}
+                    className="text-zinc-500 hover:text-red-400 p-1.5 hover:bg-red-500/10 rounded-lg transition-all cursor-pointer"
+                    title="Usuń ćwiczenie"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
                 </div>
-                <button
-                  onClick={() => handleRemoveExercise(workoutEx.id)}
-                  className="text-zinc-500 hover:text-red-400 p-1.5 hover:bg-red-500/10 rounded-lg transition-all cursor-pointer"
-                  title="Usuń ćwiczenie"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
+
+                {/* Plan guidelines if present */}
+                {(workoutEx.targetReps || workoutEx.tempo || workoutEx.rest || workoutEx.notes) && (
+                  <div className="flex flex-wrap items-center gap-1.5 pt-1">
+                    {workoutEx.targetReps && (
+                      <span className="text-[11px] bg-zinc-800/90 border border-zinc-700/60 text-zinc-300 font-mono px-2 py-0.5 rounded-md font-semibold">
+                        Powt: <strong className="text-yellow-400">{workoutEx.targetReps}</strong>
+                      </span>
+                    )}
+                    {workoutEx.tempo && workoutEx.tempo !== '-' && (
+                      <span className="text-[11px] bg-zinc-800/90 border border-zinc-700/60 text-zinc-300 font-mono px-2 py-0.5 rounded-md font-semibold">
+                        Tempo: <strong className="text-cyan-400">{workoutEx.tempo}</strong>
+                      </span>
+                    )}
+                    {workoutEx.rest && (
+                      <span className="text-[11px] bg-zinc-800/90 border border-zinc-700/60 text-zinc-300 font-mono px-2 py-0.5 rounded-md font-semibold">
+                        Przerwa: <strong className="text-emerald-400">{workoutEx.rest}</strong>
+                      </span>
+                    )}
+                    {workoutEx.notes && (
+                      <p className="w-full text-xs text-amber-300/90 bg-amber-500/10 border border-amber-500/20 px-2.5 py-1 rounded-md font-medium mt-1">
+                        💡 {workoutEx.notes}
+                      </p>
+                    )}
+                  </div>
+                )}
               </div>
 
               {/* Sets Table */}
-              <div className="p-4 overflow-x-auto">
-                <table className="w-full text-left border-collapse min-w-[340px]">
+              <div className="p-3 sm:p-4 overflow-x-auto">
+                <table className="w-full text-left border-collapse min-w-[370px]">
                   <thead>
                     <tr className="border-b border-zinc-800/60 text-[11px] text-zinc-500 font-bold uppercase tracking-wider">
-                      <th className="py-2 text-center w-12">Seria</th>
-                      <th className="py-2 pl-2">Typ</th>
+                      <th className="py-2 text-center w-10">Seria</th>
+                      <th className="py-2 text-center px-1">Poprzednio</th>
+                      <th className="py-2 pl-1.5">Typ</th>
                       <th className="py-2">Ciężar (kg)</th>
-                      <th className="py-2">Powtórzenia</th>
-                      <th className="py-2 text-center w-16">RPE</th>
-                      <th className="py-2 text-center w-12">Status</th>
-                      <th className="py-2 text-center w-20">Akcje</th>
+                      <th className="py-2">Powt.</th>
+                      <th className="py-2 text-center w-14">RPE</th>
+                      <th className="py-2 text-center w-10">Status</th>
+                      <th className="py-2 text-center w-16">Akcje</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {workoutEx.sets.map((set, sIndex) => (
-                      <tr
-                        key={set.id}
-                        className={`border-b border-zinc-800/30 transition-colors ${
-                          set.completed ? 'bg-emerald-500/5' : ''
-                        }`}
-                      >
-                        {/* Set index */}
-                        <td className="py-2 text-center font-mono text-xs text-zinc-400 font-bold">
-                          {sIndex + 1}
-                        </td>
+                    {workoutEx.sets.map((set, sIndex) => {
+                      const prevSet = getPreviousSetData(workoutEx.name, sIndex);
 
-                        {/* Set type toggle */}
-                        <td className="py-2 pl-2">
-                          <button
-                            onClick={() =>
-                              handleUpdateSet(workoutEx.id, set.id, {
-                                isWarmup: !set.isWarmup,
-                              })
-                            }
-                            className={`text-[11px] font-bold px-1.5 py-0.5 rounded-sm uppercase tracking-wide border cursor-pointer ${
-                              set.isWarmup
-                                ? 'bg-orange-500/10 text-orange-400 border-orange-500/20'
-                                : 'bg-zinc-800 text-zinc-400 border-zinc-700/40 hover:border-zinc-600'
-                            }`}
-                            title="Przełącz seria rozgrzewkowa / robocza"
-                          >
-                            {set.isWarmup ? 'Rozgrz' : 'Roboc'}
-                          </button>
-                        </td>
+                      return (
+                        <tr
+                          key={set.id}
+                          className={`border-b border-zinc-800/30 transition-colors ${
+                            set.completed ? 'bg-emerald-500/5' : ''
+                          }`}
+                        >
+                          {/* Set index */}
+                          <td className="py-2 text-center font-mono text-xs text-zinc-400 font-bold">
+                            {sIndex + 1}
+                          </td>
 
-                        {/* Weight input */}
-                        <td className="py-2">
-                          <div className="flex items-center gap-1">
-                            <input
-                              type="number"
-                              step="any"
-                              value={set.weight === 0 ? '' : set.weight}
-                              onChange={(e) =>
+                          {/* Previous performance column */}
+                          <td className="py-2 text-center px-1">
+                            {prevSet ? (
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  handleUpdateSet(workoutEx.id, set.id, {
+                                    weight: set.weight === 0 ? prevSet.weight : set.weight,
+                                    reps: set.reps === 0 ? prevSet.reps : set.reps,
+                                  });
+                                }}
+                                className="inline-flex items-center gap-0.5 font-mono text-[11px] font-semibold text-zinc-400 hover:text-yellow-400 bg-zinc-950/80 hover:bg-yellow-400/10 border border-zinc-800/90 hover:border-yellow-400/30 px-1.5 py-0.5 rounded transition-all cursor-pointer whitespace-nowrap"
+                                title={`Poprzednio (${prevSet.sessionDate}): ${prevSet.weight}kg × ${prevSet.reps}. Kliknij, aby uzupełnić.`}
+                              >
+                                <span className="text-zinc-300">{prevSet.weight}kg</span>
+                                <span className="text-zinc-500 text-[10px]">×</span>
+                                <span className="text-zinc-400">{prevSet.reps}</span>
+                              </button>
+                            ) : (
+                              <span className="font-mono text-xs text-zinc-600">—</span>
+                            )}
+                          </td>
+
+                          {/* Set type toggle */}
+                          <td className="py-2 pl-1.5">
+                            <button
+                              onClick={() =>
                                 handleUpdateSet(workoutEx.id, set.id, {
-                                  weight: parseFloat(e.target.value) || 0,
+                                  isWarmup: !set.isWarmup,
                                 })
                               }
-                              placeholder="0"
-                              className="w-16 bg-zinc-950 text-zinc-100 font-mono text-center font-bold border border-zinc-800 focus:border-yellow-400 rounded-md py-1 text-sm outline-hidden"
-                            />
-                          </div>
-                        </td>
+                              className={`text-[10px] font-bold px-1.5 py-0.5 rounded-sm uppercase tracking-wide border cursor-pointer ${
+                                set.isWarmup
+                                  ? 'bg-orange-500/10 text-orange-400 border-orange-500/20'
+                                  : 'bg-zinc-800 text-zinc-400 border-zinc-700/40 hover:border-zinc-600'
+                              }`}
+                              title="Przełącz seria rozgrzewkowa / robocza"
+                            >
+                              {set.isWarmup ? 'Rozgrz' : 'Roboc'}
+                            </button>
+                          </td>
 
-                        {/* Reps input */}
-                        <td className="py-2">
-                          <input
-                            type="number"
-                            value={set.reps === 0 ? '' : set.reps}
-                            onChange={(e) =>
-                              handleUpdateSet(workoutEx.id, set.id, {
-                                reps: parseInt(e.target.value, 10) || 0,
-                              })
-                            }
-                            placeholder="0"
-                            className="w-14 bg-zinc-950 text-zinc-100 font-mono text-center font-bold border border-zinc-800 focus:border-yellow-400 rounded-md py-1 text-sm outline-hidden"
-                          />
-                        </td>
+                          {/* Weight input */}
+                          <td className="py-2">
+                            <div className="flex items-center gap-1">
+                              <input
+                                type="number"
+                                step="any"
+                                value={set.weight === 0 ? '' : set.weight}
+                                onChange={(e) =>
+                                  handleUpdateSet(workoutEx.id, set.id, {
+                                    weight: parseFloat(e.target.value) || 0,
+                                  })
+                                }
+                                placeholder={prevSet ? String(prevSet.weight) : '0'}
+                                className="w-14 sm:w-16 bg-zinc-950 text-zinc-100 font-mono text-center font-bold border border-zinc-800 focus:border-yellow-400 rounded-md py-1 text-sm outline-hidden"
+                              />
+                            </div>
+                          </td>
 
-                        {/* RPE Selector */}
-                        <td className="py-2 text-center">
-                          <select
-                            value={set.rpe || ''}
-                            onChange={(e) =>
-                              handleUpdateSet(workoutEx.id, set.id, {
-                                rpe: e.target.value ? parseInt(e.target.value, 10) : undefined,
-                              })
-                            }
-                            className="bg-zinc-950 text-zinc-300 font-mono text-xs border border-zinc-800 rounded-md py-1 px-1.5 outline-hidden focus:border-yellow-400"
-                          >
-                            <option value="">-</option>
-                            {[10, 9, 8, 7, 6, 5].map((val) => (
-                              <option key={val} value={val}>
-                                {val}
+                          {/* Reps selector (1-15) */}
+                          <td className="py-2">
+                            <select
+                              value={set.reps || ''}
+                              onChange={(e) =>
+                                handleUpdateSet(workoutEx.id, set.id, {
+                                  reps: parseInt(e.target.value, 10) || 0,
+                                })
+                              }
+                              className="w-13 sm:w-15 bg-zinc-950 text-zinc-100 font-mono text-center font-bold border border-zinc-800 focus:border-yellow-400 rounded-md py-1 px-1 text-sm outline-hidden cursor-pointer"
+                            >
+                              <option value="" className="text-zinc-500 font-mono">
+                                {prevSet ? `(${prevSet.reps})` : '-'}
                               </option>
-                            ))}
-                          </select>
-                        </td>
+                              {Array.from({ length: 15 }, (_, i) => i + 1).map((val) => (
+                                <option key={val} value={val} className="text-zinc-100 font-mono font-bold bg-zinc-900">
+                                  {val}
+                                </option>
+                              ))}
+                              {set.reps > 15 && (
+                                <option value={set.reps} className="text-zinc-100 font-mono font-bold bg-zinc-900">
+                                  {set.reps}
+                                </option>
+                              )}
+                            </select>
+                          </td>
 
-                        {/* Checkmark Status button */}
-                        <td className="py-2 text-center">
-                          <button
-                            onClick={() =>
-                              handleUpdateSet(workoutEx.id, set.id, {
-                                completed: !set.completed,
-                              })
-                            }
-                            className={`w-7 h-7 rounded-md flex items-center justify-center transition-all cursor-pointer ${
-                              set.completed
-                                ? 'bg-emerald-500 text-zinc-950 hover:bg-emerald-600'
-                                : 'border border-zinc-700 bg-zinc-950 hover:border-zinc-500 text-transparent'
-                            }`}
-                          >
-                            <Check className="w-4 h-4 stroke-[3]" />
-                          </button>
-                        </td>
+                          {/* RPE Selector */}
+                          <td className="py-2 text-center">
+                            <select
+                              value={set.rpe || ''}
+                              onChange={(e) =>
+                                handleUpdateSet(workoutEx.id, set.id, {
+                                  rpe: e.target.value ? parseInt(e.target.value, 10) : undefined,
+                                })
+                              }
+                              className="bg-zinc-950 text-zinc-300 font-mono text-xs border border-zinc-800 rounded-md py-1 px-1 outline-hidden focus:border-yellow-400"
+                            >
+                              <option value="">-</option>
+                              {[10, 9, 8, 7, 6, 5].map((val) => (
+                                <option key={val} value={val}>
+                                  {val}
+                                </option>
+                              ))}
+                            </select>
+                          </td>
 
-                        {/* Set actions */}
-                        <td className="py-2 text-center">
-                          <div className="flex items-center justify-center gap-1">
+                          {/* Checkmark Status button */}
+                          <td className="py-2 text-center">
                             <button
-                              onClick={() => handleCopySet(workoutEx.id, sIndex)}
-                              className="text-zinc-500 hover:text-zinc-300 p-1 rounded-sm cursor-pointer"
-                              title="Duplikuj serię"
+                              onClick={() =>
+                                handleUpdateSet(workoutEx.id, set.id, {
+                                  completed: !set.completed,
+                                })
+                              }
+                              className={`w-7 h-7 rounded-md flex items-center justify-center transition-all cursor-pointer ${
+                                set.completed
+                                  ? 'bg-emerald-500 text-zinc-950 hover:bg-emerald-600'
+                                  : 'border border-zinc-700 bg-zinc-950 hover:border-zinc-500 text-transparent'
+                              }`}
                             >
-                              <Copy className="w-3.5 h-3.5" />
+                              <Check className="w-4 h-4 stroke-[3]" />
                             </button>
-                            <button
-                              onClick={() => handleRemoveSet(workoutEx.id, set.id)}
-                              className="text-zinc-500 hover:text-red-400 p-1 rounded-sm cursor-pointer"
-                              title="Usuń serię"
-                            >
-                              <Trash2 className="w-3.5 h-3.5" />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
+                          </td>
+
+                          {/* Set actions */}
+                          <td className="py-2 text-center">
+                            <div className="flex items-center justify-center gap-1">
+                              <button
+                                onClick={() => handleCopySet(workoutEx.id, sIndex)}
+                                className="text-zinc-500 hover:text-zinc-300 p-1 rounded-sm cursor-pointer"
+                                title="Duplikuj serię"
+                              >
+                                <Copy className="w-3.5 h-3.5" />
+                              </button>
+                              <button
+                                onClick={() => handleRemoveSet(workoutEx.id, set.id)}
+                                className="text-zinc-500 hover:text-red-400 p-1 rounded-sm cursor-pointer"
+                                title="Usuń serię"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>

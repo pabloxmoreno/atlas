@@ -1,16 +1,15 @@
 import React, { useState } from 'react';
-import { Calendar, Clock, TrendingUp, Dumbbell, Trash2, Search, ChevronDown, ChevronUp, AlertTriangle, Flame } from 'lucide-react';
+import { Calendar, Clock, TrendingUp, Dumbbell, Trash2, Search, ChevronDown, ChevronUp, AlertTriangle } from 'lucide-react';
 import { WorkoutSession } from '../types';
-import { calculateSessionCalories } from '../utils';
 
 interface WorkoutLogsProps {
   workouts: WorkoutSession[];
   onDeleteSession: (sessionId: string) => void;
-  userWeight: number;
-  userHeight: number;
+  userWeight?: number;
+  userHeight?: number;
 }
 
-export default function WorkoutLogs({ workouts, onDeleteSession, userWeight, userHeight }: WorkoutLogsProps) {
+export default function WorkoutLogs({ workouts, onDeleteSession }: WorkoutLogsProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedSessions, setExpandedSessions] = useState<Record<string, boolean>>({});
   const [sessionToDelete, setSessionToDelete] = useState<string | null>(null);
@@ -107,8 +106,6 @@ export default function WorkoutLogs({ workouts, onDeleteSession, userWeight, use
               (sum, ex) => sum + ex.sets.filter((s) => s.completed).length,
               0
             );
-            const wCats = session.exercises.map((e) => e.category);
-            const sessionCalories = calculateSessionCalories(session.duration, userWeight, userHeight, wCats);
 
             return (
               <div
@@ -136,7 +133,7 @@ export default function WorkoutLogs({ workouts, onDeleteSession, userWeight, use
                   </div>
 
                   <div className="flex items-center justify-between md:justify-end gap-6 border-t md:border-t-0 border-zinc-800/40 pt-3 md:pt-0">
-                    <div className="grid grid-cols-3 gap-x-4 gap-y-1 text-left md:text-right">
+                    <div className="grid grid-cols-2 gap-x-5 gap-y-1 text-left md:text-right">
                       <div>
                         <span className="text-[11px] text-zinc-500 font-bold uppercase tracking-wider block">
                           Tonaż
@@ -151,14 +148,6 @@ export default function WorkoutLogs({ workouts, onDeleteSession, userWeight, use
                         </span>
                         <span className="text-xs font-mono font-bold text-zinc-300">
                           {completedSetsCount}/{totalSetsCount}
-                        </span>
-                      </div>
-                      <div>
-                        <span className="text-[11px] text-zinc-500 font-bold uppercase tracking-wider block">
-                          Spalone
-                        </span>
-                        <span className="text-xs font-mono font-bold text-orange-400">
-                          {sessionCalories} kcal
                         </span>
                       </div>
                     </div>
