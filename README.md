@@ -1,8 +1,8 @@
-# ATLAS Gym Tracker // CORE.TRAIN 🏋️‍♂️⚡
+# ATLAS Gym Tracker 🏋️‍♂️⚡
 
-**ATLAS Gym Tracker** (znany również jako **CORE.TRAIN**) to zaawansowana, zoptymalizowana pod kątem wydajności aplikacja webowa typu Single Page Application (SPA) służąca do rejestrowania treningów siłowych i monitorowania postępów. 
+**ATLAS Gym Tracker** to zaawansowana, zoptymalizowana pod kątem wydajności aplikacja webowa typu Progressive Web App (PWA) / SPA służąca do rejestrowania treningów siłowych i precyzyjnego monitorowania postępów.
 
-Zaprojektowana w minimalistycznym i ekstremalnie czytelnym stylu **High Density**, aplikacja oferuje bezkompromisowe wrażenia wizualne (ciemny motyw *Cosmic Slate*, wyraziste akcenty o kolorze `#F27D26`, ostre geometryczne linie bez zaokrągleń oraz czcionki *Space Grotesk* i *JetBrains Mono* dla technicznego, profesjonalnego sznytu).
+Zaprojektowana w minimalistycznym i ekstremalnie czytelnym stylu **High Density**, aplikacja oferuje bezkompromisowe wrażenia wizualne (ciemny motyw *Cosmic Slate*, wyraziste akcenty o kolorze `#F27D26`, ostre geometryczne linie oraz czcionki *Space Grotesk* i *JetBrains Mono* dla technicznego, profesjonalnego sznytu).
 
 ---
 
