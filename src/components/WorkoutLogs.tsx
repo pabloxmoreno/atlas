@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Calendar, Clock, TrendingUp, Dumbbell, Trash2, Search, ChevronDown, ChevronUp, AlertTriangle } from 'lucide-react';
+import { Calendar, Clock, TrendingUp, Dumbbell, Trash2, Search, ChevronDown, ChevronUp, AlertTriangle, FileText } from 'lucide-react';
 import { WorkoutSession } from '../types';
 
 interface WorkoutLogsProps {
@@ -130,6 +130,17 @@ export default function WorkoutLogs({ workouts, onDeleteSession }: WorkoutLogsPr
                         <Clock className="w-3.5 h-3.5" /> {formatDuration(session.duration)}
                       </span>
                     </p>
+
+                    {/* Always visible full training note without truncation */}
+                    {session.notes && (
+                      <div className="mt-2.5 p-2.5 bg-zinc-950/80 border border-zinc-800/80 rounded-xl text-xs text-zinc-300 flex items-start gap-2 select-text">
+                        <FileText className="w-3.5 h-3.5 text-yellow-400 shrink-0 mt-0.5" />
+                        <div className="flex-1 min-w-0">
+                          <span className="text-[11px] font-semibold text-zinc-400 block mb-0.5">Notatka do treningu:</span>
+                          <p className="whitespace-pre-wrap leading-relaxed text-zinc-200">{session.notes}</p>
+                        </div>
+                      </div>
+                    )}
                   </div>
 
                   <div className="flex items-center justify-between md:justify-end gap-6 border-t md:border-t-0 border-zinc-800/40 pt-3 md:pt-0">
