@@ -1,8 +1,8 @@
 <svg viewBox="0 0 512 512" width="512" height="512" xmlns="http://www.w3.org/2000/svg">
-  <rect width="512" height="512" rx="115" fill="#FACC15"/>
+  <rect width="512" height="512" rx="115" fill="#F27D26"/>
   <g transform="translate(96, 96) scale(13.333333)"
-     fill="#09090B"
-     stroke="#09090B"
+     fill="#0A0A0C"
+     stroke="#0A0A0C"
      stroke-width="2.5"
      stroke-linecap="round"
      stroke-linejoin="round">
