@@ -80,6 +80,7 @@ export default function WorkoutActive({
   const [restIsActive, setRestIsActive] = useState(false);
   const [autoStartRest, setAutoStartRest] = useState(true);
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+  const [exerciseToDelete, setExerciseToDelete] = useState<WorkoutExercise | null>(null);
 
   const restTimerRef = useRef<NodeJS.Timeout | null>(null);
   const startTimeRef = useRef<number>(new Date(activeSession.startTime).getTime());
@@ -512,9 +513,9 @@ export default function WorkoutActive({
 
                     <div className="flex items-center gap-1">
                       <button
-                        onClick={() => handleRemoveExercise(workoutEx.id)}
+                        onClick={() => setExerciseToDelete(workoutEx)}
                         className="text-zinc-500 hover:text-red-400 p-1.5 hover:bg-red-500/10 rounded-lg transition-all cursor-pointer"
-                        title="Usuń ćwiczenie"
+                        title="Usuń ćwiczenie z treningu"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -1009,6 +1010,46 @@ export default function WorkoutActive({
                 className="flex-1 py-2.5 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-xl cursor-pointer"
               >
                 Tak, porzuć
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* REMOVE EXERCISE CONFIRMATION DIALOG */}
+      {exerciseToDelete && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-xs z-50 flex items-center justify-center p-4 animate-fade-in">
+          <div className="bg-zinc-900 border border-zinc-800 w-full max-w-sm rounded-2xl p-6 text-center space-y-4 shadow-2xl">
+            <div className="w-12 h-12 bg-red-500/10 border border-red-500/20 rounded-full flex items-center justify-center mx-auto text-red-500">
+              <Trash2 className="w-6 h-6" />
+            </div>
+
+            <div className="space-y-1.5">
+              <h3 className="font-display font-bold text-white text-lg">Usunąć ćwiczenie?</h3>
+              <p className="text-sm font-semibold text-yellow-400">
+                {exerciseToDelete.name}
+              </p>
+              <p className="text-zinc-400 text-xs">
+                Czy na pewno chcesz usunąć to ćwiczenie z bieżącego treningu? Wszystkie wpisane serie zostaną usunięte z tej sesji.
+              </p>
+            </div>
+
+            <div className="flex gap-3 pt-2">
+              <button
+                onClick={() => setExerciseToDelete(null)}
+                className="flex-1 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold text-xs rounded-xl cursor-pointer transition-colors"
+              >
+                Anuluj
+              </button>
+              <button
+                id="btn-confirm-remove-exercise"
+                onClick={() => {
+                  handleRemoveExercise(exerciseToDelete.id);
+                  setExerciseToDelete(null);
+                }}
+                className="flex-1 py-2.5 bg-red-600 hover:bg-red-700 text-white font-bold text-xs rounded-xl cursor-pointer transition-colors shadow-lg shadow-red-900/30"
+              >
+                Tak, usuń
               </button>
             </div>
           </div>
