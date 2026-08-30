@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Play, Plus, Trash2, Search, X, Dumbbell, Save, Check, ChevronDown, ChevronsUpDown } from 'lucide-react';
+import { Play, Plus, Trash2, Search, X, Dumbbell, Save, Check, ChevronDown } from 'lucide-react';
 import { WorkoutTemplate, Exercise, ExerciseCategory } from '../types';
 
 interface WorkoutTemplatesProps {
@@ -35,19 +35,6 @@ export default function WorkoutTemplates({
       ...prev,
       [templateId]: !prev[templateId],
     }));
-  };
-
-  const allExpanded = templates.length > 0 && templates.every((t) => expandedTemplates[t.id]);
-  const toggleAll = () => {
-    if (allExpanded) {
-      setExpandedTemplates({});
-    } else {
-      const all: Record<string, boolean> = {};
-      templates.forEach((t) => {
-        all[t.id] = true;
-      });
-      setExpandedTemplates(all);
-    }
   };
 
   const [showAddExercise, setShowAddExercise] = useState(false);
@@ -261,24 +248,9 @@ export default function WorkoutTemplates({
         </div>
       ) : (
         /* TEMPLATES LIST VIEW */
-        <div className="space-y-4">
-          {/* Controls bar: Count & Expand/Collapse All */}
-          <div className="flex items-center justify-between text-xs px-1">
-            <span className="text-zinc-400 font-medium">
-              Dostępne szablony: <strong className="text-zinc-200">{templates.length}</strong>
-            </span>
-            <button
-              onClick={toggleAll}
-              className="flex items-center gap-1 text-zinc-400 hover:text-yellow-400 font-semibold px-2.5 py-1 rounded-lg hover:bg-zinc-900 border border-zinc-800/80 transition-colors cursor-pointer"
-            >
-              <ChevronsUpDown className="w-3.5 h-3.5" />
-              <span>{allExpanded ? 'Zwiń wszystkie' : 'Rozwiń wszystkie'}</span>
-            </button>
-          </div>
-
+        <div className="space-y-3">
           <div className="grid grid-cols-1 gap-3">
             {templates.map((template) => {
-              const isCustom = template.id.startsWith('custom-');
               const isExpanded = !!expandedTemplates[template.id];
               const totalSets = template.exercises.reduce((acc, ex) => acc + (ex.defaultSetsCount || 3), 0);
 
@@ -321,19 +293,17 @@ export default function WorkoutTemplates({
                       </div>
 
                       <div className="flex items-center justify-end gap-1.5 shrink-0 self-end sm:self-center">
-                        {isCustom && (
-                          <button
-                            onClick={() => {
-                              if (confirm('Czy na pewno chcesz usunąć ten szablon?')) {
-                                onDeleteTemplate(template.id);
-                              }
-                            }}
-                            className="text-zinc-500 hover:text-red-400 p-2 hover:bg-red-500/10 rounded-lg transition-colors cursor-pointer"
-                            title="Usuń szablon"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        )}
+                        <button
+                          onClick={() => {
+                            if (confirm(`Czy na pewno chcesz usunąć szablon "${template.name}"?`)) {
+                              onDeleteTemplate(template.id);
+                            }
+                          }}
+                          className="text-zinc-500 hover:text-red-400 p-2 hover:bg-red-500/10 rounded-lg transition-colors cursor-pointer"
+                          title="Usuń szablon"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
 
                         <button
                           type="button"
@@ -384,19 +354,17 @@ export default function WorkoutTemplates({
                         </div>
 
                         <div className="flex items-center gap-1">
-                          {isCustom && (
-                            <button
-                              onClick={() => {
-                                if (confirm('Czy na pewno chcesz usunąć ten szablon?')) {
-                                  onDeleteTemplate(template.id);
-                                }
-                              }}
-                              className="text-zinc-500 hover:text-red-400 p-1.5 hover:bg-red-500/10 rounded-lg transition-colors cursor-pointer shrink-0"
-                              title="Usuń szablon"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
-                          )}
+                          <button
+                            onClick={() => {
+                              if (confirm(`Czy na pewno chcesz usunąć szablon "${template.name}"?`)) {
+                                onDeleteTemplate(template.id);
+                              }
+                            }}
+                            className="text-zinc-500 hover:text-red-400 p-1.5 hover:bg-red-500/10 rounded-lg transition-colors cursor-pointer shrink-0"
+                            title="Usuń szablon"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
                           <button
                             type="button"
                             onClick={() => toggleExpand(template.id)}
