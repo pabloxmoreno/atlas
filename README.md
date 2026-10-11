@@ -12,7 +12,7 @@ Zaprojektowana w minimalistycznym i ekstremalnie czytelnym stylu **High Density*
 *   **Aktywny Timer Sesji:** Precyzyjne odmierzanie czasu trwania treningu z sekundnikiem na żywo.
 *   **Struktura Serii:** Możliwość elastycznego oznaczania serii rozgrzewkowych (`Warmup`), serii roboczych oraz precyzyjne punktowanie skali zmęczenia **RPE (Rate of Perceived Exertion)** w skali 1-10.
 *   **Baza Ćwiczeń z Kategoriami:** Dostęp do wbudowanego katalogu ćwiczeń podzielonych na partie (Klatka piersiowa, Plecy, Nogi, Barki, Ramiona, Brzuch, Kardio, Inne) z możliwością dodawania własnych unikalnych ćwiczeń.
-*   **Szablony Treningowe:** Szybki start dzięki zapisanym planom (np. *Hypertrophy B*, *Push/Pull/Legs*). Twórz, edytuj i uruchamiaj ulubione zestawy ćwiczeń jednym kliknięciem.
+*   **Szablony Treningowe:** Szybki start dzięki zapisanym planom (np. *PPL Redukcja: Dzień 1 Push A, Dzień 2 Pull A, Dzień 4 Push B, Dzień 5 Pull B*). Twórz, edytuj i uruchamiaj ulubione zestawy ćwiczeń jednym kliknięciem.
 
 ### 🧠 2. Integracja z AI (Sztuczną Inteligencją)
 *   **Eksporter Raportów AI:** Narzędzie automatycznie generujące uporządkowaną strukturę w formacie **Markdown**, zoptymalizowaną pod kątem wklejenia do dużych modeli językowych (np. *Google Gemini*, *ChatGPT*, *Claude*).

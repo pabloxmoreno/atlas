@@ -20,6 +20,7 @@ export const defaultExercises: Exercise[] = [
   { id: 'ex-40', name: 'Ściąganie drążka (chwyt neutralny)', category: 'Plecy' },
   { id: 'ex-47', name: 'Wiosłowanie na maszynie (Hammer)', category: 'Plecy' },
   { id: 'ex-49', name: 'Narciarz (ściąganie na prostych r.)', category: 'Plecy' },
+  { id: 'ex-51', name: 'Ściąganie na maszynie (Hammer/Iso-Lateral) - chwyt wąski/neutralny', category: 'Plecy' },
 
   // Nogi
   { id: 'ex-12', name: 'Przysiad ze sztangą na plecach (Back Squat)', category: 'Nogi' },
@@ -58,6 +59,7 @@ export const defaultExercises: Exercise[] = [
   { id: 'ex-30', name: 'Allahy (spięcia brzucha na wyciągu)', category: 'Brzuch' },
   { id: 'ex-31', name: 'Wznosy nóg w zwisie na drążku', category: 'Brzuch' },
   { id: 'ex-32', name: 'Brzuszki na ławce skośnej', category: 'Brzuch' },
+  { id: 'ex-52', name: 'Martwy robak (Dead Bug)', category: 'Brzuch' },
 
   // Kardio
   { id: 'ex-33', name: 'Bieganie (Bieżnia)', category: 'Kardio' },
@@ -68,11 +70,11 @@ export const defaultExercises: Exercise[] = [
 
 export const defaultTemplates: WorkoutTemplate[] = [
   {
-    id: 'temp-acl-push-a',
-    name: 'Dzień 1: Push A (Siła góra / Hipertrofia-rehab dół)',
-    planName: 'Push/Pull ACL Rehab',
-    tag: 'Faza: 11 tyg. po rekonstrukcji ACL',
-    notes: 'Metoda RAMP przed pierwszym ćwiczeniem wielostawowym. Skupienie na sile góry i kontrolowanej hipertrofii/rehabilitacji dołu.',
+    id: 'temp-ppl-push-a',
+    name: 'Dzień 1: Push A (Siła - Klatka, Barki, Triceps)',
+    planName: 'PPL Redukcja (Push/Pull)',
+    tag: 'Siła - Klatka, Barki, Triceps',
+    notes: 'Cel: Hipertrofia i Siła na redukcji (deficyt kaloryczny 2300 kcal). Skupienie na sile wielostawów góry ciała. Nogi realizowane osobno z fizjoterapeutą.',
     exercises: [
       {
         exerciseId: 'ex-1',
@@ -93,24 +95,13 @@ export const defaultTemplates: WorkoutTemplate[] = [
         rest: '120s'
       },
       {
-        exerciseId: 'ex-14',
-        name: 'Wyciskanie na suwnicy (Leg Press)',
-        category: 'Nogi',
-        defaultSetsCount: 3,
-        targetReps: '12-15',
-        tempo: '3-1-1-0',
-        rest: '90s',
-        notes: 'Pełna kontrola ruchu, bez przepychania na zablokowanych stawach'
-      },
-      {
         exerciseId: 'ex-38',
         name: 'Wyciskanie sztangi na skosie dodatnim',
         category: 'Klatka piersiowa',
         defaultSetsCount: 3,
         targetReps: '8-10',
         tempo: '3-0-1-1',
-        rest: '90s',
-        notes: 'Bez generowania siły z nóg (brak leg drive)'
+        rest: '90s'
       },
       {
         exerciseId: 'ex-20',
@@ -129,24 +120,15 @@ export const defaultTemplates: WorkoutTemplate[] = [
         targetReps: '8-12',
         tempo: '2-0-1-1',
         rest: '90s'
-      },
-      {
-        exerciseId: 'ex-17',
-        name: 'Wspięcia na palce stojąc',
-        category: 'Nogi',
-        defaultSetsCount: 4,
-        targetReps: '15-20',
-        tempo: '2-1-1-1',
-        rest: '60s'
       }
     ]
   },
   {
-    id: 'temp-acl-pull-a',
-    name: 'Dzień 2: Pull A (Siła góra / Hipertrofia-rehab dół)',
-    planName: 'Push/Pull ACL Rehab',
-    tag: 'Faza: 11 tyg. po rekonstrukcji ACL',
-    notes: 'Metoda RAMP przed 1. ćwiczeniem. Stopy stabilnie o platformy przy wiosłowaniu, aby odciążyć nogę.',
+    id: 'temp-ppl-pull-a',
+    name: 'Dzień 2: Pull A (Siła - Plecy, Tył barku, Biceps, Brzuch)',
+    planName: 'PPL Redukcja (Push/Pull)',
+    tag: 'Siła - Plecy, Tył barku, Biceps, Brzuch',
+    notes: 'Cel: Hipertrofia i Siła na redukcji (deficyt kaloryczny 2300 kcal). Ćwiczenia siłowe na plecy i tył barku. Martwy robak na stabilizację core.',
     exercises: [
       {
         exerciseId: 'ex-7',
@@ -164,21 +146,11 @@ export const defaultTemplates: WorkoutTemplate[] = [
         defaultSetsCount: 4,
         targetReps: '6-8',
         tempo: '2-0-1-1',
-        rest: '120s',
-        notes: 'Stopy stabilnie o platformy, odciąża to nogę po zabiegu'
+        rest: '120s'
       },
       {
-        exerciseId: 'ex-39',
-        name: 'Mostki biodrowe (Hip Thrust)',
-        category: 'Nogi',
-        defaultSetsCount: 3,
-        targetReps: '12-15',
-        tempo: '2-1-1-2',
-        rest: '90s'
-      },
-      {
-        exerciseId: 'ex-40',
-        name: 'Ściąganie drążka (chwyt neutralny)',
+        exerciseId: 'ex-51',
+        name: 'Ściąganie na maszynie (Hammer/Iso-Lateral) - chwyt wąski/neutralny',
         category: 'Plecy',
         defaultSetsCount: 3,
         targetReps: '10-12',
@@ -204,22 +176,22 @@ export const defaultTemplates: WorkoutTemplate[] = [
         rest: '90s'
       },
       {
-        exerciseId: 'ex-29',
-        name: 'Deska (Plank)',
+        exerciseId: 'ex-52',
+        name: 'Martwy robak (Dead Bug)',
         category: 'Brzuch',
         defaultSetsCount: 3,
-        targetReps: 'Max',
-        tempo: '-',
+        targetReps: '10-12 na stronę',
+        tempo: '2-0-2-0',
         rest: '60s'
       }
     ]
   },
   {
-    id: 'temp-acl-push-b',
-    name: 'Dzień 3: Push B (Hipertrofia góra i dół)',
-    planName: 'Push/Pull ACL Rehab',
-    tag: 'Faza: 11 tyg. po rekonstrukcji ACL',
-    notes: 'Hipertrofia góra i dół. Przysiad bułgarski wykonuj z asekuracją (lub w razie potrzeby zamień na Split Squat).',
+    id: 'temp-ppl-push-b',
+    name: 'Dzień 4: Push B (Hipertrofia - Klatka, Barki, Triceps)',
+    planName: 'PPL Redukcja (Push/Pull)',
+    tag: 'Hipertrofia - Klatka, Barki, Triceps',
+    notes: 'Cel: Hipertrofia na redukcji (deficyt kaloryczny 2300 kcal). Większa objętość, kontrolowane tempo i izolacje (klatka, barki, triceps).',
     exercises: [
       {
         exerciseId: 'ex-42',
@@ -229,16 +201,6 @@ export const defaultTemplates: WorkoutTemplate[] = [
         targetReps: '8-10',
         tempo: '3-0-1-1',
         rest: '90s'
-      },
-      {
-        exerciseId: 'ex-13',
-        name: 'Przysiad bułgarski',
-        category: 'Nogi',
-        defaultSetsCount: 3,
-        targetReps: '10-12',
-        tempo: '3-0-1-0',
-        rest: '90s',
-        notes: 'Z asekuracją. W razie dyskomfortu zamienić na klasyczne wykroki w miejscu (Split Squat)'
       },
       {
         exerciseId: 'ex-3',
@@ -266,33 +228,15 @@ export const defaultTemplates: WorkoutTemplate[] = [
         targetReps: '12-15',
         tempo: '2-0-1-1',
         rest: '60s'
-      },
-      {
-        exerciseId: 'ex-45',
-        name: 'Goblet Squat (z lekkim hantlem)',
-        category: 'Nogi',
-        defaultSetsCount: 3,
-        targetReps: '12-15',
-        tempo: '3-1-1-0',
-        rest: '90s'
-      },
-      {
-        exerciseId: 'ex-46',
-        name: 'Wspięcia na palce siedząc',
-        category: 'Nogi',
-        defaultSetsCount: 3,
-        targetReps: '15-20',
-        tempo: '2-1-1-1',
-        rest: '60s'
       }
     ]
   },
   {
-    id: 'temp-acl-pull-b',
-    name: 'Dzień 4: Pull B (Hipertrofia góra i dół)',
-    planName: 'Push/Pull ACL Rehab',
-    tag: 'Faza: 11 tyg. po rekonstrukcji ACL',
-    notes: 'Hipertrofia góra i dół. Odwodzenie nóg wzmacnia pośladkowy średni dla stabilizacji kolana.',
+    id: 'temp-ppl-pull-b',
+    name: 'Dzień 5: Pull B (Hipertrofia - Plecy, Tył barku, Biceps, Brzuch)',
+    planName: 'PPL Redukcja (Push/Pull)',
+    tag: 'Hipertrofia - Plecy, Tył barku, Biceps, Brzuch',
+    notes: 'Cel: Hipertrofia na redukcji (deficyt kaloryczny 2300 kcal). Pompujące ćwiczenia na plecy, tył barku, biceps oraz spięcia brzucha (Allahy).',
     exercises: [
       {
         exerciseId: 'ex-47',
@@ -311,16 +255,6 @@ export const defaultTemplates: WorkoutTemplate[] = [
         targetReps: '10-12',
         tempo: '3-0-1-1',
         rest: '90s'
-      },
-      {
-        exerciseId: 'ex-48',
-        name: 'Odwodzenie nóg na maszynie siedząc',
-        category: 'Nogi',
-        defaultSetsCount: 3,
-        targetReps: '15-20',
-        tempo: '2-0-1-1',
-        rest: '60s',
-        notes: 'Wzmacnianie pośladkowego średniego dla stabilizacji kolana'
       },
       {
         exerciseId: 'ex-49',

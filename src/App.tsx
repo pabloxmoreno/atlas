@@ -50,16 +50,19 @@ export default function App() {
       const storedTemplates = localStorage.getItem('atlas_templates');
       if (storedTemplates) {
         const parsedTemplates: WorkoutTemplate[] = JSON.parse(storedTemplates);
-        // Ensure default templates are present and updated with latest plan exercises
-        const existingIds = new Set(parsedTemplates.map((t) => t.id));
-        const missingDefaults = defaultTemplates.filter((dt) => !existingIds.has(dt.id));
+        // Filter out legacy ACL templates
+        const nonLegacyTemplates = parsedTemplates.filter((t) => !t.id.startsWith('temp-acl-'));
         
-        const mergedTemplates = parsedTemplates.map((t) => {
-          const defaultMatch = defaultTemplates.find((dt) => dt.id === t.id);
-          return defaultMatch ? { ...defaultMatch, ...t, exercises: defaultMatch.exercises } : t;
+        // Preserve user created custom templates
+        const customTemplates = nonLegacyTemplates.filter((t) => t.id.startsWith('custom-'));
+        
+        // Match standard default templates with any overrides, otherwise use fresh defaults
+        const currentDefaultTemplates = defaultTemplates.map((dt) => {
+          const stored = nonLegacyTemplates.find((t) => t.id === dt.id);
+          return stored ? { ...dt, ...stored, exercises: dt.exercises } : dt;
         });
 
-        const finalTemplates = [...missingDefaults, ...mergedTemplates];
+        const finalTemplates = [...currentDefaultTemplates, ...customTemplates];
         setTemplates(finalTemplates);
         localStorage.setItem('atlas_templates', JSON.stringify(finalTemplates));
       } else {
